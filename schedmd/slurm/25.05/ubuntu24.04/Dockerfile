@@ -8,6 +8,10 @@ ARG SLURM_VERSION=25.05-latest
 ARG SLURM_DIR="slurm-${SLURM_VERSION}"
 ARG PARENT_IMAGE=ubuntu:24.04
 
+# OpenMPI build arguments
+ARG OPENMPI_VERSION="5.0.8"
+ARG OPENMPI_CONFIGURE_OPTIONS="--with-pmix --with-slurm --enable-shared --disable-static"
+
 ################################################################################
 FROM alpine:latest AS slurm-src
 
@@ -106,6 +110,37 @@ apt-get -qq -y install --no-install-recommends \
   supervisor tini
 apt-get clean && rm -rf /var/lib/apt/lists/*
 EOR
+
+# Install OpenMPI with PMIx support
+RUN <<EOR
+# Install OpenMPI build dependencies
+set -xeuo pipefail
+apt-get -qq update
+apt-get -qq -y install --no-install-recommends \
+  build-essential wget ca-certificates \
+  libpmix-dev libpmix2t64 libhwloc-dev libevent-dev libssl-dev \
+  zlib1g-dev flex
+apt-get clean && rm -rf /var/lib/apt/lists/*
+EOR
+
+RUN <<EOR
+# Build and install OpenMPI
+set -xeuo pipefail
+cd /tmp
+wget -q https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-${OPENMPI_VERSION}.tar.gz
+tar -xzf openmpi-${OPENMPI_VERSION}.tar.gz
+cd openmpi-${OPENMPI_VERSION}
+./configure --prefix=/usr/local ${OPENMPI_CONFIGURE_OPTIONS}
+make -j$(nproc)
+make install
+ldconfig
+cd /tmp
+rm -rf openmpi-${OPENMPI_VERSION}*
+EOR
+
+# Set OpenMPI environment variables
+ENV PATH="/usr/local/bin:$PATH"
+ENV LD_LIBRARY_PATH="/usr/local/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 ################################################################################
 # SLURM: slurmctld
