@@ -101,10 +101,6 @@ dnf -q -y install --setopt='install_weak_deps=False' \
 dnf clean all
 EOR
 
-# Ensure OpenMPI environment variables are set
-ENV PATH="/usr/local/bin:$PATH"
-ENV LD_LIBRARY_PATH="/usr/local/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-
 ################################################################################
 # SLURM: login-pyxis
 # BUILD: `docker build --target=login-pyxis -t [<registry>/]login-pyxis:<tag> .`
@@ -158,7 +154,3 @@ dnf -q -y install --setopt='install_weak_deps=False' \
   nvidia-container-toolkit
 dnf clean all
 EOR
-
-# Ensure OpenMPI environment variables are set
-ENV PATH="/usr/local/bin:$PATH"
-ENV LD_LIBRARY_PATH="/usr/local/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
