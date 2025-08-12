@@ -8,11 +8,13 @@ ARG ENROOT_VERSION=3.5.0
 ARG PYXIS_VERSION=0.20.0
 
 ################################################################################
-FROM ghcr.io/slinkyproject/slurmd:master-ubuntu24.04 AS download
+FROM --platform=$BUILDPLATFORM ghcr.io/slinkyproject/slurmd:master-ubuntu24.04 AS download
 
 SHELL ["bash", "-c"]
 
 ARG DEBIAN_FRONTEND=noninteractive
+ARG BUILDPLATFORM
+ARG TARGETPLATFORM
 
 USER root
 WORKDIR /tmp/
@@ -20,8 +22,12 @@ WORKDIR /tmp/
 ARG ENROOT_VERSION
 ENV ENROOT_VERSION="${ENROOT_VERSION}"
 
-ADD https://github.com/NVIDIA/enroot/releases/download/v${ENROOT_VERSION}/enroot_${ENROOT_VERSION}-1_amd64.deb enroot_${ENROOT_VERSION}-1_amd64.deb
-ADD https://github.com/NVIDIA/enroot/releases/download/v${ENROOT_VERSION}/enroot+caps_${ENROOT_VERSION}-1_amd64.deb enroot+caps_${ENROOT_VERSION}-1_amd64.deb
+# Set architecture for package downloads
+ARG TARGETARCH
+ARG DEB_ARCH=${TARGETARCH:-amd64}
+
+ADD https://github.com/NVIDIA/enroot/releases/download/v${ENROOT_VERSION}/enroot_${ENROOT_VERSION}-1_${DEB_ARCH}.deb enroot_${ENROOT_VERSION}-1_${DEB_ARCH}.deb
+ADD https://github.com/NVIDIA/enroot/releases/download/v${ENROOT_VERSION}/enroot+caps_${ENROOT_VERSION}-1_${DEB_ARCH}.deb enroot+caps_${ENROOT_VERSION}-1_${DEB_ARCH}.deb
 
 ARG PYXIS_VERSION
 ENV PYXIS_VERSION="${PYXIS_VERSION}"
@@ -33,6 +39,7 @@ ADD https://github.com/NVIDIA/pyxis/archive/refs/tags/v${PYXIS_VERSION}.tar.gz p
 RUN <<EOR
 # Generate Pyxis DEB
 set -xeuo pipefail
+echo "Building on $BUILDPLATFORM for $TARGETPLATFORM"
 apt-get -qq update
 apt-get -qq -y install --no-install-recommends \
   build-essential \

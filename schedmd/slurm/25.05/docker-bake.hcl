@@ -33,6 +33,7 @@ function "format_tag" {
 ################################################################################
 
 target "_slurm" {
+  platforms = ["linux/amd64", "linux/arm64"]
   labels = {
     # Ref: https://github.com/opencontainers/image-spec/blob/v1.0/annotations.md
     "org.opencontainers.image.authors" = "slinky@schedmd.com"
