@@ -8,18 +8,35 @@ ARG ENROOT_VERSION=3.5.0
 ARG PYXIS_VERSION=0.20.0
 
 ################################################################################
-FROM ghcr.io/slinkyproject/slurmd:25.05-rockylinux9 AS download
+FROM --platform=$BUILDPLATFORM ghcr.io/slinkyproject/slurmd:25.05-rockylinux9 AS download
 
 SHELL ["bash", "-c"]
 
+ARG BUILDPLATFORM
+ARG TARGETPLATFORM
 USER root
 WORKDIR /tmp/
 
 ARG ENROOT_VERSION
 ENV ENROOT_VERSION="${ENROOT_VERSION}"
 
-ADD https://github.com/NVIDIA/enroot/releases/download/v${ENROOT_VERSION}/enroot-${ENROOT_VERSION}-1.el8.x86_64.rpm enroot-${ENROOT_VERSION}-1.el8.x86_64.rpm
-ADD https://github.com/NVIDIA/enroot/releases/download/v${ENROOT_VERSION}/enroot+caps-${ENROOT_VERSION}-1.el8.x86_64.rpm enroot+caps-${ENROOT_VERSION}-1.el8.x86_64.rpm
+# Set architecture for package downloads
+ARG TARGETARCH
+
+# Use RUN to download packages with architecture detection
+RUN <<EOR
+#!/bin/bash
+set -euo pipefail
+case ${TARGETARCH:-amd64} in
+  amd64) ARCH="x86_64" ;;
+  arm64) ARCH="aarch64" ;;
+  *) ARCH="x86_64" ;;
+esac
+curl -L -o enroot-${ENROOT_VERSION}-1.el8.${ARCH}.rpm \
+  https://github.com/NVIDIA/enroot/releases/download/v${ENROOT_VERSION}/enroot-${ENROOT_VERSION}-1.el8.${ARCH}.rpm
+curl -L -o enroot+caps-${ENROOT_VERSION}-1.el8.${ARCH}.rpm \
+  https://github.com/NVIDIA/enroot/releases/download/v${ENROOT_VERSION}/enroot+caps-${ENROOT_VERSION}-1.el8.${ARCH}.rpm
+EOR
 
 ARG PYXIS_VERSION
 ENV PYXIS_VERSION="${PYXIS_VERSION}"
@@ -31,6 +48,7 @@ ADD https://github.com/NVIDIA/pyxis/archive/refs/tags/v${PYXIS_VERSION}.tar.gz p
 RUN <<EOR
 # Generate Pyxis RPM
 set -xeuo pipefail
+echo "Building on $BUILDPLATFORM for $TARGETPLATFORM"
 dnf -q -y update
 dnf -q -y install --setopt='install_weak_deps=False' \
   '@Development' \

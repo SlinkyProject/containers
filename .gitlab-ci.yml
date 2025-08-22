@@ -1,5 +1,4 @@
 ---
-
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -18,6 +17,9 @@ default:
     - docker:28.1-dind
   before_script:
     - docker info
+    - docker buildx create --use --name multiarch-builder || true
+    - docker buildx use multiarch-builder
+    - docker buildx inspect --bootstrap
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
 
 variables:
@@ -54,6 +56,9 @@ variables:
           - ubuntu24.04
   before_script:
     - docker info
+    - docker buildx create --use --name multiarch-builder || true
+    - docker buildx use multiarch-builder
+    - docker buildx inspect --bootstrap
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
     - |
       if [ -z $DOCKER_REGISTRY_PASSWORD ] || [ -z $DOCKER_REGISTRY ] || [ -z $DOCKER_REGISTRY_USER ]; then
