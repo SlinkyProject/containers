@@ -6,7 +6,7 @@ pre-commit:
   before_script:
     - docker info
     - apk update && apk upgrade
-    - apk add --no-cache pre-commit shellcheck shfmt
+    - apk add --no-cache pre-commit shellcheck shfmt make curl go
   script:
     - pre-commit run --all-files --show-diff-on-failure --verbose
 

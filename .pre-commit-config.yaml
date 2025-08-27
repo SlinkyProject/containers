@@ -64,3 +64,11 @@ repos:
       - id: shellcheck
         args:
           - --severity=warning
+  - repo: local
+    hooks:
+      - id: make-generate-docs
+        name: Make Generate Docs
+        entry: make generate-docs
+        language: system
+        pass_filenames: false
+        require_serial: true
