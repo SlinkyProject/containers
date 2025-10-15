@@ -7,6 +7,13 @@ set -euo pipefail
 # Additional arguments to pass to slurmd.
 export SLURMD_OPTIONS="${SLURMD_OPTIONS:-} $*"
 
+# Additional arguments to pass to daemons.
+export SSHD_OPTIONS="${SSHD_OPTIONS:-}"
+export SSSD_OPTIONS="${SSSD_OPTIONS:-}"
+
+# Ref: https://slurm.schedmd.com/pam_slurm_adopt.html#OPTIONS
+export PAM_SLURM_ADOPT_OPTIONS="${PAM_SLURM_ADOPT_OPTIONS:-}"
+
 # The asserted CPU resource limit of the pod.
 export POD_CPUS="${POD_CPUS:-0}"
 
@@ -94,9 +101,31 @@ function addConfItem() {
 	export SLURMD_OPTIONS="${slurmdOptions[*]}"
 }
 
+# configure_pam_slurm configures PAM to use pam_slurm_adopt for SSH sessions.
+#
+# This allows SSH access to be restricted to users with active jobs on the node.
+# Ref: https://slurm.schedmd.com/pam_slurm_adopt.html#PAM_CONFIG
+function configure_pam_slurm() {
+	# Add pam_slurm_adopt to SSH PAM configuration if not already present
+	if grep -q "pam_slurm_adopt.so" /etc/pam.d/sshd 2>/dev/null; then
+		return
+	fi
+	local search_line="@include common-account"
+	local pam_slurm_adopt="account    required     pam_slurm_adopt.so"
+	sed -i "s|^${search_line}[^\n]*|&\n${pam_slurm_adopt} ${PAM_SLURM_ADOPT_OPTIONS}|" /etc/pam.d/sshd
+}
+
 function main() {
 	mkdir -p /run/slurm/
 	mkdir -p /var/spool/slurmd/
+	mkdir -p /run/sshd/
+	chmod 0755 /run/sshd/
+	mkdir -p /run/dbus/
+	mkdir -p /run/slurm/
+	rm -f /var/run/dbus/pid
+
+	ssh-keygen -A
+	configure_pam_slurm
 
 	local coreSpecCount=0
 	if ((POD_CPUS > 0)); then

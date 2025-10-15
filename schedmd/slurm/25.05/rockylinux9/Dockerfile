@@ -185,6 +185,8 @@ RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked <<EOR
 set -xeuo pipefail
 dnf -q -y install --setopt='install_weak_deps=False' \
   gawk socat \
+  openssh-server \
+  authselect sssd sssd-ad sssd-ldap \
   ./slurm-devel-[0-9]*.rpm \
   ./slurm-libpmi-[0-9]*.rpm \
   ./slurm-pam_slurm-[0-9]*.rpm \
@@ -195,17 +197,22 @@ rm *.rpm
 mkdir -p /var/spool/slurmd/
 sed -i -E "s/^passwd:[[:space:]]+/&slurm /g" /etc/nsswitch.conf
 sed -i -E "s/^group:[[:space:]]+/&slurm /g" /etc/nsswitch.conf
+mkdir -p /etc/authselect
+authselect select sssd with-mkhomedir --force
+rm -f /etc/ssh/ssh_host_*
 EOR
 
 COPY files/etc/supervisord.conf /etc/
 COPY \
-  files/etc/supervisord.d/slurmd.ini \
   files/etc/supervisord.d/fakesystemd.ini \
+  files/etc/supervisord.d/slurmd.ini \
+  files/etc/supervisord.d/sshd.ini \
+  files/etc/supervisord.d/sssd.ini \
   /etc/supervisord.d/
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/slurmd-entrypoint.sh /usr/local/bin/entrypoint.sh
 
-EXPOSE 6818/tcp
+EXPOSE 6818/tcp 22/tcp
 ENTRYPOINT ["entrypoint.sh"]
 
 ################################################################################
