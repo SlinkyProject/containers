@@ -181,6 +181,7 @@ set -xeuo pipefail
 apt-get -qq update
 apt-get -qq -y install --no-install-recommends --fix-broken \
   gawk socat \
+  openssh-server \
   ./slurm-smd-client_[0-9]*.deb \
   ./slurm-smd-client-dbgsym_[0-9]*.ddeb \
   ./slurm-smd-dev_[0-9]*.deb \
@@ -199,17 +200,21 @@ mkdir -p /var/spool/slurmd/
 cp -v /etc/nsswitch.conf{,.bak}
 sed -i -E "s/^passwd:[[:space:]]+/&slurm /g" /etc/nsswitch.conf
 sed -i -E "s/^group:[[:space:]]+/&slurm /g" /etc/nsswitch.conf
+# Configure SSH
+rm -f /etc/ssh/ssh_host_*
 EOR
 
 COPY files/etc/supervisor/supervisord.conf /etc/supervisor/
 COPY \
   files/etc/supervisor/conf.d/slurmd.conf \
+  files/etc/supervisor/conf.d/sshd.conf \
   files/etc/supervisor/conf.d/fakesystemd.conf \
   /etc/supervisor/conf.d/
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/slurmd-entrypoint.sh /usr/local/bin/entrypoint.sh
 
 EXPOSE 6818/tcp
+EXPOSE 22/tcp
 ENTRYPOINT ["entrypoint.sh"]
 
 ################################################################################

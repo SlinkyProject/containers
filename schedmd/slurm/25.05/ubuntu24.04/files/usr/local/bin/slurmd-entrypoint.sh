@@ -6,6 +6,7 @@ set -euo pipefail
 
 # Additional arguments to pass to slurmd.
 export SLURMD_OPTIONS="${SLURMD_OPTIONS:-} $*"
+export SSHD_OPTIONS="${SSHD_OPTIONS:-""}"
 
 # The asserted CPU resource limit of the pod.
 export POD_CPUS="${POD_CPUS:-0}"
@@ -94,9 +95,22 @@ function addConfItem() {
 	export SLURMD_OPTIONS="${slurmdOptions[*]}"
 }
 
+# Configure PAM for pam_slurm_adopt (following login's dynamic pattern)
+function configure_pam() {
+	# Add pam_slurm_adopt to SSH PAM configuration if not already present
+	if ! grep -q "pam_slurm_adopt.so" /etc/pam.d/sshd 2>/dev/null; then
+		# Insert after common-account include
+		sed -i '/^@include common-account/a -account   required     pam_slurm_adopt.so action_no_jobs=deny action_unknown=newest action_adopt_failure=deny action_generic_failure=deny disable_x11=0' /etc/pam.d/sshd
+	fi
+}
+
 function main() {
 	mkdir -p /run/slurm/
 	mkdir -p /var/spool/slurmd/
+	mkdir -p /run/sshd/
+	chmod 0755 /run/sshd/
+	ssh-keygen -A
+	configure_pam
 
 	local coreSpecCount=0
 	if ((POD_CPUS > 0)); then
