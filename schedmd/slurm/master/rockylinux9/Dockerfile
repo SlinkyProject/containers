@@ -6,7 +6,7 @@
 
 ARG SLURM_VERSION=master
 ARG SLURM_DIR=slurm
-ARG PARENT_IMAGE=rockylinux:9
+ARG PARENT_IMAGE=rockylinux/rockylinux:9
 
 ################################################################################
 FROM alpine:latest AS slurm-src

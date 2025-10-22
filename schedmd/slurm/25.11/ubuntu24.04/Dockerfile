@@ -55,7 +55,7 @@ apt-get -qq -y upgrade
 apt-get -qq -y install --no-install-recommends \
   build-essential fakeroot devscripts equivs
 ## Build
-mk-build-deps -ir --tool='apt-get -y -o Debug::pkgProblemResolver=yes --no-install-recommends' ${SLURM_DIR}/debian/control>/dev/null
+mk-build-deps -ir --tool='apt-get -y -o Debug::pkgProblemResolver=yes --no-install-recommends' ${SLURM_DIR}/debian/control >/dev/null
 ( cd ${SLURM_DIR} && debuild -b -uc -us >/dev/null )
 EOR
 
