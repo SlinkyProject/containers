@@ -25,6 +25,7 @@
     matrix:
       - VERSION: &build-versions
           - master
+          - '25.11'
           - '25.05'
         FLAVOR: &build-flavors
           - rockylinux9
@@ -95,6 +96,7 @@ build::manifest:
   parallel:
     matrix:
       - VERSION: &release-versions
+          - '25.11'
           - '25.05'
         FLAVOR: &release-flavors
           - rockylinux9

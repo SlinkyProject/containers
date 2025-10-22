@@ -19,6 +19,7 @@ docker-bake-check:
     matrix:
       - VERSION:
           - master
+          - '25.11'
           - '25.05'
         FLAVOR:
           - rockylinux9

@@ -15,10 +15,10 @@ docker bake $BAKE_IMPORTS --print
 docker bake $BAKE_IMPORTS
 ```
 
-For example, the following will build Slurm 25.05 on Rocky Linux 9.
+For example, the following will build Slurm 25.11 on Rocky Linux 9.
 
 ```sh
-export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.05/rockylinux9/slurm.hcl"
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.11/rockylinux9/slurm.hcl"
 cd ./schedmd/slurm/
 docker bake $BAKE_IMPORTS --print
 docker bake $BAKE_IMPORTS
