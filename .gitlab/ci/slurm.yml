@@ -19,7 +19,7 @@
     BAKE_TARGET: all
     BAKE_IMPORTS: --file docker-bake.hcl --file $VERSION/$FLAVOR/slurm.hcl
   tags:
-    - schedmd-slc
+    - schedmd-runners
     - linux/$ARCH
   parallel:
     matrix:
@@ -56,7 +56,7 @@ build::manifest:
   variables:
     REGISTRY: $CI_REGISTRY_IMAGE
   tags:
-    - schedmd-slc
+    - schedmd-runners
   parallel:
     matrix:
       - VERSION: *build-versions
@@ -91,7 +91,7 @@ build::manifest:
     BAKE_TARGET: all
     BAKE_IMPORTS: --file docker-bake.hcl --file $VERSION/$FLAVOR/slurm.hcl
   tags:
-    - schedmd-slc
+    - schedmd-runners
     - linux/$ARCH
   parallel:
     matrix:
@@ -125,7 +125,7 @@ release::manifest:
   variables:
     REGISTRY: $DOCKER_REGISTRY
   tags:
-    - schedmd-slc
+    - schedmd-runners
   parallel:
     matrix:
       - VERSION: *release-versions
