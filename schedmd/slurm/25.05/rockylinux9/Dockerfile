@@ -58,7 +58,7 @@ if [ "${SLURM_DIR}" != "$SLURM_RPM_DIR" ]; then
 fi
 rm -f ${SLURM_RPM_DIR}.tar.bz2
 tar -caf ${SLURM_RPM_DIR}.tar.bz2 $SLURM_RPM_DIR
-dnf -q -y builddep \
+dnf -y builddep \
   -D '_with_slurmrestd 1' \
   -D '_with_jwt 1' \
   -D '_with_yaml 1' \
@@ -71,7 +71,7 @@ dnf -q -y builddep \
   -D '_with_hdf5 yes' \
   -D '_with_libcurl yes' \
   -D '_enable_debug 1' \
-  ${SLURM_RPM_DIR}/slurm.spec
+  ${SLURM_RPM_DIR}/slurm.spec >/dev/null
 ## FIXME: remove package installations after RPM spec makes them dependencies: cgroups/v2
 dnf -q -y install --setopt='install_weak_deps=False' \
   kernel-headers dbus-devel
