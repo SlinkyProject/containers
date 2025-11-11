@@ -14,6 +14,7 @@
   - [Multiple Architectures](#multiple-architectures)
     - [Emulation (QEMU)](#emulation-qemu)
     - [Multiple Native Nodes](#multiple-native-nodes)
+  - [Extending the images with additional software](#extending-the-images-with-additional-software)
 
 <!-- mdformat-toc end -->
 
@@ -171,6 +172,44 @@ export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hc
 cd ./schedmd/slurm/
 docker bake $BAKE_IMPORTS --builder multiarch multiarch --print
 docker bake $BAKE_IMPORTS --builder multiarch multiarch
+```
+
+## Extending the images with additional software
+
+Image build stages may also be added or modified to manage custom software
+present in images. It is generally advisible to keep the size and complexity of
+each stage minimal, in order to reduce image build time and improve the number
+of stages that can be re-used between builds. Furthermore, changes should be
+made in the most specific stage possible. For example, installing JupyterLab for
+users should be done in a layer that is specific to the `slurmd` or `login`
+targets, so that it is not installed unnecessarily in `slurmctld` or `slurmdbd`
+images, increasing image size.
+
+The following is an example of how the `base-extra` stage could be modified for
+the installation of additional software, specifically PyTorch and JupyterLab:
+
+```dockerfile
+FROM base AS base-extra
+
+SHELL ["bash", "-c"]
+
+RUN  --mount=type=cache,target=/var/cache/dnf,sharing=locked <<EOR
+# Install Extra Packages
+set -xeuo pipefail
+dnf -q -y install \
+    python3 \
+    python3-pip
+pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+EOR
+```
+
+After modifying the `base-extra` layer, build the `slurmd` and `login` images:
+
+```bash
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.05/rockylinux9/slurm.hcl"
+cd ./schedmd/slurm/
+docker bake $BAKE_IMPORTS slurmd login --print
+docker bake $BAKE_IMPORTS slurmd login
 ```
 
 <!-- Links -->
