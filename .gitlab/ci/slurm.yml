@@ -41,10 +41,14 @@
     - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH && $VERSION == 'master'
       changes:
         - schedmd/slurm/**/*
+        - .gitlab-ci.yml
+        - .gitlab/ci/**/*.yml
       allow_failure: true
     - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
       changes:
         - schedmd/slurm/**/*
+        - .gitlab-ci.yml
+        - .gitlab/ci/**/*.yml
 
 build::slurm:
   extends: .build::slurm
@@ -63,6 +67,12 @@ build::manifest:
         FLAVOR: *build-flavors
   script:
     - ./schedmd/slurm/manifest.sh --push --amd64 --arm64
+  rules:
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH && $VERSION == 'master'
+      changes:
+        - schedmd/slurm/**/*
+        - .gitlab-ci.yml
+        - .gitlab/ci/**/*.yml
 
 ################################################################################
 
@@ -132,3 +142,9 @@ release::manifest:
         FLAVOR: *release-flavors
   script:
     - ./schedmd/slurm/manifest.sh --push --amd64 --arm64
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - schedmd/slurm/**/*
+        - .gitlab-ci.yml
+        - .gitlab/ci/**/*.yml
