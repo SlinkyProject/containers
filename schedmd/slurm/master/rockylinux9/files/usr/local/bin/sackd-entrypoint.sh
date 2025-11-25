@@ -8,8 +8,6 @@ set -euo pipefail
 export SACKD_OPTIONS="${SACKD_OPTIONS:-} $*"
 
 function main() {
-	mkdir -p /run/slurm/
-
 	exec supervisord -c /etc/supervisord.conf
 }
 main

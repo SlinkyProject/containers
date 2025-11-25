@@ -322,12 +322,13 @@ apt-get -qq -y install --no-install-recommends --fix-broken \
 rm *.deb && rm *.ddeb
 # Prepare Directories
 mkdir -p /run/slurm/
+chown ${SLURM_USER}:${SLURM_USER} /run/slurm
 EOR
 
 COPY files/etc/supervisor/supervisord.conf /etc/supervisor/
 COPY \
   files/etc/supervisor/conf.d/sackd.conf \
-  files/etc/supervisor/conf.d/fakesystemd.conf \
+  files/etc/supervisor/conf.d/fakesystemd-slurm.conf \
   /etc/supervisor/conf.d/
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/sackd-entrypoint.sh /usr/local/bin/entrypoint.sh
@@ -362,7 +363,7 @@ EOR
 
 COPY files/etc/supervisor/supervisord.conf /etc/supervisor/
 COPY \
-  files/etc/supervisor/conf.d/fakesystemd.conf \
+  files/etc/supervisor/conf.d/fakesystemd-slurm.conf \
   files/etc/supervisor/conf.d/sackd.conf \
   files/etc/supervisor/conf.d/sshd.conf \
   files/etc/supervisor/conf.d/sssd.conf \
