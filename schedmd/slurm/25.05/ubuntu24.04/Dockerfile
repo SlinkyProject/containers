@@ -196,7 +196,6 @@ apt-get -qq -y install --no-install-recommends --fix-broken \
 rm *.deb && rm *.ddeb
 # Configure
 mkdir -p /var/spool/slurmd/
-cp -v /etc/nsswitch.conf{,.bak}
 sed -i -E "s/^passwd:[[:space:]]+/&slurm /g" /etc/nsswitch.conf
 sed -i -E "s/^group:[[:space:]]+/&slurm /g" /etc/nsswitch.conf
 EOR
