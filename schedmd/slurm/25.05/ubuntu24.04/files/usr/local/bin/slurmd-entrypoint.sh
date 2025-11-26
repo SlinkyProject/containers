@@ -95,7 +95,9 @@ function addConfItem() {
 	export SLURMD_OPTIONS="${slurmdOptions[*]}"
 }
 
-# Configure PAM for pam_slurm_adopt (following login's dynamic pattern)
+# configure_pam configures PAM to use pam_slurm_adopt for SSH sessions.
+#
+# This allows SSH access to be restricted to users with active jobs on the node.
 function configure_pam() {
 	# Add pam_slurm_adopt to SSH PAM configuration if not already present
 	if ! grep -q "pam_slurm_adopt.so" /etc/pam.d/sshd 2>/dev/null; then
