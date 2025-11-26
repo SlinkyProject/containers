@@ -95,11 +95,13 @@ function addConfItem() {
 	export SLURMD_OPTIONS="${slurmdOptions[*]}"
 }
 
-# Configure PAM for pam_slurm_adopt (following login's dynamic pattern)
+# configure_pam configures PAM to use pam_slurm_adopt for SSH sessions.
+#
+# This allows SSH access to be restricted to users with active jobs on the node.
 function configure_pam() {
 	# Add pam_slurm_adopt to SSH PAM configuration if not already present
 	if ! grep -q "pam_slurm_adopt.so" /etc/pam.d/sshd 2>/dev/null; then
-		# Insert after common-account include
+		# Insert after account include password-auth (Rocky Linux specific pattern)
 		sed -i '/^account[[:space:]]*include[[:space:]]*password-auth/a -account   required     pam_slurm_adopt.so action_no_jobs=deny action_unknown=newest action_adopt_failure=deny action_generic_failure=deny disable_x11=0' /etc/pam.d/sshd
 	fi
 }
