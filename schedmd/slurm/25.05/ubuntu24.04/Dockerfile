@@ -351,9 +351,7 @@ apt-get -qq update
 apt-get -qq -y install --no-install-recommends \
   socat \
   openssh-server \
-  dbus-daemon \
-  oddjob-mkhomedir \
-  authselect sssd sssd-ad sssd-ldap sssd-dbus libpam-sss libnss-sss
+  authselect sssd sssd-ad sssd-ldap libpam-sss libnss-sss
 # Configure
 mkdir -p /etc/authselect
 authselect select sssd with-mkhomedir --force
@@ -362,9 +360,7 @@ EOR
 
 COPY files/etc/supervisor/supervisord.conf /etc/supervisor/
 COPY \
-  files/etc/supervisor/conf.d/dbus.conf \
   files/etc/supervisor/conf.d/fakesystemd.conf \
-  files/etc/supervisor/conf.d/oddjobd.conf \
   files/etc/supervisor/conf.d/sackd.conf \
   files/etc/supervisor/conf.d/sshd.conf \
   files/etc/supervisor/conf.d/sssd.conf \

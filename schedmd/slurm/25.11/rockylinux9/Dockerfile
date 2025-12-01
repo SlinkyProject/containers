@@ -314,9 +314,7 @@ set -xeuo pipefail
 dnf -q -y install --setopt='install_weak_deps=False' \
   socat \
   openssh-server \
-  dbus-daemon \
-  oddjob-mkhomedir \
-  authselect sssd sssd-ad sssd-ldap sssd-dbus
+  authselect sssd sssd-ad sssd-ldap
 # Configure
 mkdir -p /etc/authselect
 authselect select sssd with-mkhomedir --force
@@ -325,9 +323,7 @@ EOR
 
 COPY files/etc/supervisord.conf /etc/
 COPY \
-  files/etc/supervisord.d/dbus.ini \
   files/etc/supervisord.d/fakesystemd.ini \
-  files/etc/supervisord.d/oddjobd.ini \
   files/etc/supervisord.d/sackd.ini \
   files/etc/supervisord.d/sshd.ini \
   files/etc/supervisord.d/sssd.ini \
