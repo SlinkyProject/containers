@@ -8,8 +8,6 @@ set -euo pipefail
 export SSHD_OPTIONS="${SSHD_OPTIONS:-""}"
 export SACKD_OPTIONS="${SACKD_OPTIONS:-""}"
 export SSSD_OPTIONS="${SSSD_OPTIONS:-""}"
-export ODDJOB_OPTIONS="${ODDJOB_OPTIONS:-""}"
-export DBUS_OPTIONS="${DBUS_OPTIONS:-""}"
 
 function main() {
 	mkdir -p /run/sshd/
