@@ -86,6 +86,7 @@ docker pull ghcr.io/slinkyproject/slurmd:25.11-ubuntu24.04
 | PAM_SLURM_ADOPT_OPTIONS | Options added to the `pam_slurm_adopt` line. |
 | POD_CPUS                | Used to calculate slurmd `CoreSpecCount`.    |
 | POD_MEMORY              | Used to calculate slurmd `MemSpecLimit`.     |
+| POD_TOPOLOGY            | Used for slurmd dynamic topology.            |
 
 ## sackd
 
