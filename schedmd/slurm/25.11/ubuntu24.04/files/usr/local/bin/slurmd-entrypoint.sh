@@ -143,12 +143,6 @@ function main() {
 		addConfItem "MemSpecLimit=${memSpecLimit}"
 	fi
 
-	# Initialize SSH
-	mkdir -p /run/sshd/
-	chmod 0755 /run/sshd/
-	ssh-keygen -A
-	configure_pam_slurm
-
 	exec supervisord -c /etc/supervisor/supervisord.conf
 }
 main
