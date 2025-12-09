@@ -120,9 +120,7 @@ function main() {
 	mkdir -p /var/spool/slurmd/
 	mkdir -p /run/sshd/
 	chmod 0755 /run/sshd/
-	mkdir -p /run/dbus/
 	mkdir -p /run/slurm/
-	rm -f /var/run/dbus/pid
 
 	ssh-keygen -A
 	configure_pam_slurm
@@ -142,12 +140,6 @@ function main() {
 	if ((memSpecLimit > 0)); then
 		addConfItem "MemSpecLimit=${memSpecLimit}"
 	fi
-
-	# Initialize SSH
-	mkdir -p /run/sshd/
-	chmod 0755 /run/sshd/
-	ssh-keygen -A
-	configure_pam_slurm
 
 	exec supervisord -c /etc/supervisord.conf
 }
