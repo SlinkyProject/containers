@@ -153,15 +153,22 @@ RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked <<EOR
 set -xeuo pipefail
 dnf -q -y install --setopt='install_weak_deps=False' \
   socat \
+  authselect sssd sssd-ad sssd-ldap \
   ./slurm-slurmctld-[0-9]*.rpm \
   ./slurm-[0-9]*.rpm
 rm *.rpm
+# Configure
+sed -i -E "s/^passwd:[[:space:]]+/&slurm /g" /etc/nsswitch.conf
+sed -i -E "s/^group:[[:space:]]+/&slurm /g" /etc/nsswitch.conf
+mkdir -p /etc/authselect
+authselect select sssd with-mkhomedir --force
 EOR
 
 COPY files/etc/supervisord.conf /etc/
 COPY \
   files/etc/supervisord.d/slurmctld.ini \
   files/etc/supervisord.d/fakesystemd.ini \
+  files/etc/supervisord.d/sssd.ini \
   /etc/supervisord.d/
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/slurmctld-entrypoint.sh /usr/local/bin/entrypoint.sh
