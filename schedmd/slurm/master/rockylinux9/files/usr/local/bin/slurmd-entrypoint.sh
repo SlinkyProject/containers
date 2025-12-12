@@ -125,6 +125,7 @@ function main() {
 	ssh-keygen -A
 	configure_pam_slurm
 
+	# Ref: https://slurm.schedmd.com/slurm.conf.html#OPT_CoreSpecCount
 	local coreSpecCount=0
 	if ((POD_CPUS > 0)); then
 		coreSpecCount="$(calculateCoreSpecCount)"
@@ -133,6 +134,7 @@ function main() {
 		addConfItem "CoreSpecCount=${coreSpecCount}"
 	fi
 
+	# Ref: https://slurm.schedmd.com/slurm.conf.html#OPT_MemSpecLimit
 	local memSpecLimit=0
 	if ((POD_MEMORY > 0)); then
 		memSpecLimit="$(calculateMemSpecLimit)"

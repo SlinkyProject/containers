@@ -74,3 +74,4 @@ limitations under the License.
     :hidden:
 
     build.md
+    slurm-images.md
