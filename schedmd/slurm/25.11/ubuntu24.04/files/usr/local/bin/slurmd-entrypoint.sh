@@ -20,6 +20,9 @@ export POD_CPUS="${POD_CPUS:-0}"
 # The asserted memory resource limit (in MB) of the pod.
 export POD_MEMORY="${POD_MEMORY:-0}"
 
+# The asserted topology of the pod.
+export POD_TOPOLOGY="${POD_TOPOLOGY:-}"
+
 # calculateCoreSpecCount returns a value for CoreSpecCount for the pod.
 #
 # CoreSpecCount represents the number of cores that the slurmd/slurmstepd
@@ -141,6 +144,11 @@ function main() {
 	fi
 	if ((memSpecLimit > 0)); then
 		addConfItem "MemSpecLimit=${memSpecLimit}"
+	fi
+
+	# Ref: https://slurm.schedmd.com/topology.html#dynamic_topo
+	if [ -n "$POD_TOPOLOGY" ]; then
+		addConfItem "Topology=${POD_TOPOLOGY}"
 	fi
 
 	exec supervisord -c /etc/supervisor/supervisord.conf
