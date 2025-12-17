@@ -167,7 +167,7 @@ EOR
 COPY files/etc/supervisord.conf /etc/
 COPY \
   files/etc/supervisord.d/slurmctld.ini \
-  files/etc/supervisord.d/fakesystemd.ini \
+  files/etc/supervisord.d/fakesystemd-slurm.ini \
   files/etc/supervisord.d/sssd.ini \
   /etc/supervisord.d/
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
