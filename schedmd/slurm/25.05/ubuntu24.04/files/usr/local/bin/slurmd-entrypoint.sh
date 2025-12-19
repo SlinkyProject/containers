@@ -17,7 +17,7 @@ export PAM_SLURM_ADOPT_OPTIONS="${PAM_SLURM_ADOPT_OPTIONS:-}"
 # The asserted CPU resource limit of the pod.
 export POD_CPUS="${POD_CPUS:-0}"
 
-# The asserted memory resource limit (in MB) of the pod.
+# The asserted memory resource limit (in MiB) of the pod.
 export POD_MEMORY="${POD_MEMORY:-0}"
 
 # calculateCoreSpecCount returns a value for CoreSpecCount for the pod.
@@ -50,7 +50,7 @@ function calculateCoreSpecCount() {
 #
 # MemSpecLimit represents the amount of memory that the slurmd/slurmstepd
 # cannot use. Effectively it is the difference of the host and the pod's
-# resource limits. We have to convert memory to MB.
+# resource limits. Memory is in MiB (mebibytes) to match Slurm's internal units.
 #
 # Ref: https://slurm.schedmd.com/slurm.conf.html#OPT_MemSpecLimit
 function calculateMemSpecLimit() {
