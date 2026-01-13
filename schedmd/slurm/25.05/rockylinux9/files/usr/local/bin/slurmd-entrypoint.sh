@@ -110,9 +110,12 @@ function configure_pam_slurm() {
 	if grep -q "pam_slurm_adopt.so" /etc/pam.d/sshd 2>/dev/null; then
 		return
 	fi
+	# Insert pam_slurm_adopt BEFORE account include password-auth
+	# This is critical because password-auth contains "sufficient pam_localuser.so"
+	# which would short-circuit the PAM stack for local users, bypassing pam_slurm_adopt
 	local search_line="account[[:space:]]*include[[:space:]]*password-auth"
 	local pam_slurm_adopt="account    required     pam_slurm_adopt.so"
-	sed -i "s|^${search_line}[^\n]*|&\n${pam_slurm_adopt} ${PAM_SLURM_ADOPT_OPTIONS}|" /etc/pam.d/sshd
+	sed -i "s|^${search_line}|${pam_slurm_adopt} ${PAM_SLURM_ADOPT_OPTIONS}\n&|" /etc/pam.d/sshd
 }
 
 function main() {
