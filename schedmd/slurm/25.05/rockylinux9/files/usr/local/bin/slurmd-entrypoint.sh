@@ -12,7 +12,7 @@ export SSHD_OPTIONS="${SSHD_OPTIONS:-}"
 export SSSD_OPTIONS="${SSSD_OPTIONS:-}"
 
 # Ref: https://slurm.schedmd.com/pam_slurm_adopt.html#OPTIONS
-export PAM_SLURM_ADOPT_OPTIONS="${PAM_SLURM_ADOPT_OPTIONS:-}"
+export PAM_SLURM_ADOPT_OPTIONS="${PAM_SLURM_ADOPT_OPTIONS:-"action_adopt_failure=deny action_generic_failure=deny"}"
 
 # The asserted CPU resource limit of the pod.
 export POD_CPUS="${POD_CPUS:-0}"
