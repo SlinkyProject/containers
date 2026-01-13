@@ -113,7 +113,7 @@ function configure_pam_slurm() {
 	# Insert pam_slurm_adopt BEFORE @include common-account
 	# This is critical because common-account contains "sufficient pam_localuser.so"
 	# which would short-circuit the PAM stack for local users, bypassing pam_slurm_adopt
-	local search_line="@include common-account"
+	local search_line="@include[[:space:]]*common-account"
 	local pam_slurm_adopt="account    required     pam_slurm_adopt.so"
 	sed -i "s|^${search_line}|${pam_slurm_adopt} ${PAM_SLURM_ADOPT_OPTIONS}\n&|" /etc/pam.d/sshd
 }
