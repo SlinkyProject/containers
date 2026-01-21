@@ -42,6 +42,16 @@ ARG SLURM_DIR
 USER root
 WORKDIR /tmp/
 
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked <<EOR
+# Pre-Build Slurm
+set -xeuo pipefail
+apt-get -qq update
+apt-get -qq -y upgrade
+apt-get -qq -y install --no-install-recommends \
+  build-essential fakeroot devscripts equivs
+EOR
+
 COPY --from=slurm-src /workspace/${SLURM_DIR} ${SLURM_DIR}
 
 # Ref: https://slurm.schedmd.com/quickstart_admin.html#debuild
@@ -49,11 +59,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked <<EOR
 # Build Slurm
 set -xeuo pipefail
-apt-get -qq update
-apt-get -qq -y upgrade
-apt-get -qq -y install --no-install-recommends \
-  build-essential fakeroot devscripts equivs
-## Build
 mk-build-deps -ir --tool='apt-get -y -o Debug::pkgProblemResolver=yes --no-install-recommends' ${SLURM_DIR}/debian/control >/dev/null
 ( cd ${SLURM_DIR} && debuild -b -uc -us >/dev/null )
 EOR

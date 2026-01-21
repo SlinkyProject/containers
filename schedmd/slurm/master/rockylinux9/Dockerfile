@@ -40,17 +40,21 @@ ARG SLURM_DIR
 USER root
 WORKDIR /tmp/
 
+RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked <<EOR
+# Pre-Build Slurm
+set -xeuo pipefail
+dnf -q -y install --setopt='install_weak_deps=False' \
+  '@Development' rpm-build 'dnf-command(builddep)' 'dnf-command(config-manager)' epel-release
+dnf -q config-manager --enable crb
+dnf -q -y upgrade
+EOR
+
 COPY --from=slurm-src /workspace/${SLURM_DIR} ${SLURM_DIR}
 
 # Ref: https://slurm.schedmd.com/quickstart_admin.html#rpmbuild
 RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked <<EOR
 # Build Slurm
 set -xeuo pipefail
-dnf -q -y install --setopt='install_weak_deps=False' \
-  '@Development' rpm-build 'dnf-command(builddep)' 'dnf-command(config-manager)' epel-release
-dnf -q config-manager --enable crb
-dnf -q -y upgrade
-## Build
 SLURM_RPM_DIR="$(rpmspec -q ${SLURM_DIR}/slurm.spec 2> /dev/null | grep -Eo "slurm-[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+(-[[:alnum:]]+)?" | head -n1 | sed -E 's/-[[:digit:]]+$//g')"
 if [ "${SLURM_DIR}" != "$SLURM_RPM_DIR" ]; then
   mv ${SLURM_DIR} $SLURM_RPM_DIR
