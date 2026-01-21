@@ -17,12 +17,14 @@ ARG SLURM_TAR="slurm-${SLURM_VERSION}"
 
 WORKDIR /workspace/
 
+RUN --mount=type=cache,target=/var/cache/apk,sharing=locked \
+  apk add -q --no-cache tar
+
 ADD https://download.schedmd.com/slurm/${SLURM_TAR}.tar.bz2 ${SLURM_TAR}.tar.bz2
 
 RUN --mount=type=cache,target=/var/cache/apk,sharing=locked <<EOR
 # Unpack Slurm Source
 set -xeuo pipefail
-apk add -q --no-cache tar
 mkdir -p ${SLURM_DIR}
 tar --strip-components=1 -jxvf ${SLURM_TAR}.tar.bz2 -C ${SLURM_DIR}
 rm ${SLURM_TAR}.tar.bz2
