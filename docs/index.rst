@@ -21,8 +21,8 @@ Build Slurm Images
 
 .. code:: sh
 
-   export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
    cd ./schedmd/slurm/
+   export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
    docker bake $BAKE_IMPORTS --print
    docker bake $BAKE_IMPORTS
 
@@ -30,8 +30,8 @@ For example, the following will build Slurm 25.11 on Rocky Linux 9.
 
 .. code:: sh
 
-   export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.11/rockylinux9/slurm.hcl"
    cd ./schedmd/slurm/
+   export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.11/rockylinux9/slurm.hcl"
    docker bake $BAKE_IMPORTS --print
    docker bake $BAKE_IMPORTS
 

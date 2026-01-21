@@ -33,8 +33,8 @@ Instructions for building images via [docker bake].
 Build Slurm from the selected Slurm version and Linux flavor.
 
 ```sh
-export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 cd ./schedmd/slurm/
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 docker bake $BAKE_IMPORTS --print
 docker bake $BAKE_IMPORTS
 ```
@@ -42,8 +42,8 @@ docker bake $BAKE_IMPORTS
 For example, the following will build Slurm 25.11 on Rocky Linux 9.
 
 ```sh
-export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.11/rockylinux9/slurm.hcl"
 cd ./schedmd/slurm/
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.11/rockylinux9/slurm.hcl"
 docker bake $BAKE_IMPORTS --print
 docker bake $BAKE_IMPORTS
 ```
@@ -63,8 +63,8 @@ Build Slurm from the selected Slurm version and Linux flavor.
 
 ```sh
 export REGISTRY="my/registry"
-export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 cd ./schedmd/slurm/
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 docker bake $BAKE_IMPORTS --print
 docker bake $BAKE_IMPORTS
 ```
@@ -88,8 +88,8 @@ Build Slurm from the selected Slurm version and Linux flavor.
 ```sh
 export GIT_REPO=git@github.com:SchedMD/slurm.git
 export GIT_BRANCH=master
-export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 cd ./schedmd/slurm/
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 docker bake $BAKE_IMPORTS dev --print
 docker bake $BAKE_IMPORTS dev
 ```
@@ -99,8 +99,8 @@ docker bake $BAKE_IMPORTS dev
 Build Slurm images with the `multiarch` target:
 
 ```sh
-export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 cd ./schedmd/slurm/
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 docker bake $BAKE_IMPORTS multiarch --print
 docker bake $BAKE_IMPORTS multiarch
 ```
@@ -143,8 +143,8 @@ docker buildx inspect multiarch
 Build Slurm images:
 
 ```sh
-export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 cd ./schedmd/slurm/
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 docker bake $BAKE_IMPORTS --builder multiarch multiarch --print
 docker bake $BAKE_IMPORTS --builder multiarch multiarch
 ```
@@ -168,8 +168,8 @@ docker buildx create --name multiarch --append node-arm64
 Build Slurm images:
 
 ```sh
-export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 cd ./schedmd/slurm/
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 docker bake $BAKE_IMPORTS --builder multiarch multiarch --print
 docker bake $BAKE_IMPORTS --builder multiarch multiarch
 ```
@@ -206,8 +206,8 @@ EOR
 After modifying the `base-extra` layer, build the `slurmd` and `login` images:
 
 ```bash
-export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.05/rockylinux9/slurm.hcl"
 cd ./schedmd/slurm/
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.05/rockylinux9/slurm.hcl"
 docker bake $BAKE_IMPORTS slurmd login --print
 docker bake $BAKE_IMPORTS slurmd login
 ```
