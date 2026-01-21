@@ -16,8 +16,7 @@ WORKDIR /workspace/
 RUN --mount=type=cache,target=/var/cache/apk,sharing=locked <<EOR
 # Download Required Software
 set -xeuo pipefail
-apk upgrade -q --update-cache
-apk add -q git openssh-client
+apk add -q --no-cache git openssh-client
 install -m 0600 -d ~/.ssh
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 ssh-keyscan gitlab.com >> ~/.ssh/known_hosts

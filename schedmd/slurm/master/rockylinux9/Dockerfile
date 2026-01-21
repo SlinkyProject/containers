@@ -22,8 +22,7 @@ ADD https://github.com/SchedMD/slurm/archive/${SLURM_TAR}.tar.gz ${SLURM_VERSION
 RUN --mount=type=cache,target=/var/cache/apk,sharing=locked <<EOR
 # Unpack Slurm Source
 set -xeuo pipefail
-apk upgrade -q --update-cache
-apk add -q tar
+apk add -q --no-cache tar
 mkdir -p ${SLURM_DIR}
 tar --strip-components=1 -zxvf ${SLURM_TAR}.tar.gz -C ${SLURM_DIR}
 rm ${SLURM_TAR}.tar.gz
