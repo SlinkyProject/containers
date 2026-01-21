@@ -17,18 +17,14 @@ ARG SLURM_TAR="${SLURM_VERSION}"
 
 WORKDIR /workspace/
 
-RUN --mount=type=cache,target=/var/cache/apk,sharing=locked \
-  apk add -q --no-cache tar
+RUN apk add -q --no-cache tar
 
 ADD https://github.com/SchedMD/slurm/archive/${SLURM_TAR}.tar.gz ${SLURM_VERSION}.tar.gz
 
-RUN --mount=type=cache,target=/var/cache/apk,sharing=locked <<EOR
-# Unpack Slurm Source
-set -xeuo pipefail
-mkdir -p ${SLURM_DIR}
-tar --strip-components=1 -zxvf ${SLURM_TAR}.tar.gz -C ${SLURM_DIR}
-rm ${SLURM_TAR}.tar.gz
-EOR
+RUN \
+  mkdir -p ${SLURM_DIR} && \
+  tar --strip-components=1 -zxvf ${SLURM_TAR}.tar.gz -C ${SLURM_DIR} && \
+  rm ${SLURM_TAR}.tar.gz
 
 ################################################################################
 FROM ${PARENT_IMAGE} AS build
