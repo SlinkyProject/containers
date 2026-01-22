@@ -47,7 +47,7 @@ set -xeuo pipefail
 apt-get -qq update
 apt-get -qq -y upgrade
 apt-get -qq -y install --no-install-recommends \
-  build-essential fakeroot devscripts equivs
+  build-essential apt-utils fakeroot devscripts equivs
 EOR
 
 COPY --from=slurm-src /workspace/${SLURM_DIR} ${SLURM_DIR}

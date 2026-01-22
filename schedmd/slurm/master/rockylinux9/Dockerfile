@@ -42,7 +42,7 @@ RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked <<EOR
 # Pre-Build Slurm
 set -xeuo pipefail
 dnf -q -y install --setopt='install_weak_deps=False' \
-  '@Development' rpm-build 'dnf-command(builddep)' 'dnf-command(config-manager)' epel-release
+  '@Development' dnf-utils rpm-build 'dnf-command(builddep)' 'dnf-command(config-manager)' epel-release
 dnf -q config-manager --enable crb
 dnf -q -y upgrade
 EOR
