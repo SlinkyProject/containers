@@ -157,7 +157,9 @@ EOR
 COPY files/etc/supervisor/supervisord.conf /etc/supervisor/
 COPY \
   files/etc/supervisor/conf.d/slurmctld.conf \
+  files/etc/supervisor/conf.d/fakesystemd.conf \
   /etc/supervisor/conf.d/
+COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/slurmctld-entrypoint.sh /usr/local/bin/entrypoint.sh
 
 EXPOSE 6817/tcp

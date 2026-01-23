@@ -300,7 +300,7 @@ EOR
 COPY files/etc/supervisord.conf /etc/
 COPY \
   files/etc/supervisord.d/sackd.ini \
-  files/etc/supervisord.d/fakesystemd.ini \
+  files/etc/supervisord.d/fakesystemd-slurm.ini \
   /etc/supervisord.d/
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/sackd-entrypoint.sh /usr/local/bin/entrypoint.sh
@@ -331,7 +331,7 @@ EOR
 
 COPY files/etc/supervisord.conf /etc/
 COPY \
-  files/etc/supervisord.d/fakesystemd.ini \
+  files/etc/supervisord.d/fakesystemd-slurm.ini \
   files/etc/supervisord.d/sackd.ini \
   files/etc/supervisord.d/sshd.ini \
   files/etc/supervisord.d/sssd.ini \
