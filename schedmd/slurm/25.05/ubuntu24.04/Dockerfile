@@ -17,17 +17,14 @@ ARG SLURM_TAR="slurm-${SLURM_VERSION}"
 
 WORKDIR /workspace/
 
+RUN apk add -q --no-cache tar
+
 ADD https://download.schedmd.com/slurm/${SLURM_TAR}.tar.bz2 ${SLURM_TAR}.tar.bz2
 
-RUN --mount=type=cache,target=/var/cache/apk,sharing=locked <<EOR
-# Unpack Slurm Source
-set -xeuo pipefail
-apk upgrade -q --update-cache
-apk add -q tar
-mkdir -p ${SLURM_DIR}
-tar --strip-components=1 -jxvf ${SLURM_TAR}.tar.bz2 -C ${SLURM_DIR}
-rm ${SLURM_TAR}.tar.bz2
-EOR
+RUN \
+  mkdir -p ${SLURM_DIR} && \
+  tar --strip-components=1 -jxvf ${SLURM_TAR}.tar.bz2 -C ${SLURM_DIR} && \
+  rm ${SLURM_TAR}.tar.bz2
 
 ################################################################################
 FROM ${PARENT_IMAGE} AS build
@@ -43,6 +40,16 @@ ARG SLURM_DIR
 USER root
 WORKDIR /tmp/
 
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked <<EOR
+# Pre-Build Slurm
+set -xeuo pipefail
+apt-get -qq update
+apt-get -qq -y upgrade
+apt-get -qq -y install --no-install-recommends \
+  build-essential apt-utils fakeroot devscripts equivs
+EOR
+
 COPY --from=slurm-src /workspace/${SLURM_DIR} ${SLURM_DIR}
 
 # Ref: https://slurm.schedmd.com/quickstart_admin.html#debuild
@@ -50,11 +57,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked <<EOR
 # Build Slurm
 set -xeuo pipefail
-apt-get -qq update
-apt-get -qq -y upgrade
-apt-get -qq -y install --no-install-recommends \
-  build-essential fakeroot devscripts equivs
-## Build
 mk-build-deps -ir --tool='apt-get -y -o Debug::pkgProblemResolver=yes --no-install-recommends' ${SLURM_DIR}/debian/control >/dev/null
 ( cd ${SLURM_DIR} && debuild -b -uc -us >/dev/null )
 EOR

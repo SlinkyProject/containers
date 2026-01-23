@@ -13,16 +13,6 @@ ARG GIT_BRANCH=master
 
 WORKDIR /workspace/
 
-RUN --mount=type=cache,target=/var/cache/apk,sharing=locked <<EOR
-# Download Required Software
-set -xeuo pipefail
-apk upgrade -q --update-cache
-apk add -q git openssh-client
-install -m 0600 -d ~/.ssh
-ssh-keyscan github.com >> ~/.ssh/known_hosts
-ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-EOR
-
 # NOTE:
 # - if `Permission denied (publickey)`, ssh-agent may lack an identity.
 # - Add identity to ssh-agent with `ssh-add ~/.ssh/id_ed25519`.
