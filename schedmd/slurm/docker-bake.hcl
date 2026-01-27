@@ -12,6 +12,7 @@ variable "SUFFIX" {}
 ################################################################################
 
 slurm_version = "master"
+slurm_version_micro = "1"
 slurm_dir = slurm_version(slurm_version)
 linux_flavor = "rockylinux9"
 context = "${slurm_dir}/${linux_flavor}"
@@ -42,6 +43,7 @@ function "format_tag" {
 target "_slurm" {
   args = {
     SLURM_VERSION = slurm_version
+    SLURM_VERSION_MICRO = slurm_version_micro
   }
   labels = {
     # Ref: https://github.com/opencontainers/image-spec/blob/v1.0/annotations.md

@@ -5,6 +5,7 @@
 ################################################################################
 
 ARG SLURM_VERSION=25.05-latest
+ARG SLURM_VERSION_MICRO=1
 ARG SLURM_DIR=slurm
 ARG PARENT_IMAGE=rockylinux/rockylinux:9
 
@@ -12,18 +13,19 @@ ARG PARENT_IMAGE=rockylinux/rockylinux:9
 FROM alpine:latest AS slurm-src
 
 ARG SLURM_VERSION
+ARG SLURM_VERSION_MICRO
 ARG SLURM_DIR
-ARG SLURM_TAR="slurm-${SLURM_VERSION}.tar.bz2"
+ARG SLURM_TAR="slurm-${SLURM_VERSION//./-}-${SLURM_VERSION_MICRO}.tar.gz"
 
 WORKDIR /workspace/
 
 RUN apk add -q --no-cache tar
 
-ADD https://download.schedmd.com/slurm/${SLURM_TAR} ${SLURM_TAR}
+ADD https://github.com/SchedMD/slurm/archive/refs/tags/${SLURM_TAR} ${SLURM_TAR}
 
 RUN \
   mkdir -p ${SLURM_DIR} && \
-  tar --strip-components=1 -jxvf ${SLURM_TAR} -C ${SLURM_DIR} && \
+  tar --strip-components=1 -zxvf ${SLURM_TAR} -C ${SLURM_DIR} && \
   rm ${SLURM_TAR}
 
 ################################################################################

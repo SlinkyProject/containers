@@ -5,6 +5,7 @@
 ################################################################################
 
 ARG SLURM_VERSION=master
+ARG SLURM_VERSION_MICRO=1
 ARG SLURM_DIR=slurm
 ARG PARENT_IMAGE=ubuntu:24.04
 
@@ -12,6 +13,7 @@ ARG PARENT_IMAGE=ubuntu:24.04
 FROM alpine:latest AS slurm-src
 
 ARG SLURM_VERSION
+ARG SLURM_VERSION_MICRO
 ARG SLURM_DIR
 ARG SLURM_TAR="${SLURM_VERSION}.tar.gz"
 
