@@ -13,18 +13,18 @@ FROM alpine:latest AS slurm-src
 
 ARG SLURM_VERSION
 ARG SLURM_DIR
-ARG SLURM_TAR="slurm-${SLURM_VERSION}"
+ARG SLURM_TAR="slurm-${SLURM_VERSION}.tar.bz2"
 
 WORKDIR /workspace/
 
 RUN apk add -q --no-cache tar
 
-ADD https://download.schedmd.com/slurm/${SLURM_TAR}.tar.bz2 ${SLURM_TAR}.tar.bz2
+ADD https://download.schedmd.com/slurm/${SLURM_TAR} ${SLURM_TAR}
 
 RUN \
   mkdir -p ${SLURM_DIR} && \
-  tar --strip-components=1 -jxvf ${SLURM_TAR}.tar.bz2 -C ${SLURM_DIR} && \
-  rm ${SLURM_TAR}.tar.bz2
+  tar --strip-components=1 -jxvf ${SLURM_TAR} -C ${SLURM_DIR} && \
+  rm ${SLURM_TAR}
 
 ################################################################################
 FROM ${PARENT_IMAGE} AS build
