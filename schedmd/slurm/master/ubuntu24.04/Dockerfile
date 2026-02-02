@@ -5,6 +5,7 @@
 ################################################################################
 
 ARG SLURM_VERSION=master
+ARG SLURM_VERSION_MICRO=1
 ARG SLURM_DIR=slurm
 ARG PARENT_IMAGE=ubuntu:24.04
 
@@ -12,19 +13,20 @@ ARG PARENT_IMAGE=ubuntu:24.04
 FROM alpine:latest AS slurm-src
 
 ARG SLURM_VERSION
+ARG SLURM_VERSION_MICRO
 ARG SLURM_DIR
-ARG SLURM_TAR="${SLURM_VERSION}"
+ARG SLURM_TAR="${SLURM_VERSION}.tar.gz"
 
 WORKDIR /workspace/
 
 RUN apk add -q --no-cache tar
 
-ADD https://github.com/SchedMD/slurm/archive/${SLURM_TAR}.tar.gz ${SLURM_VERSION}.tar.gz
+ADD https://github.com/SchedMD/slurm/archive/${SLURM_TAR} ${SLURM_TAR}
 
 RUN \
   mkdir -p ${SLURM_DIR} && \
-  tar --strip-components=1 -zxvf ${SLURM_TAR}.tar.gz -C ${SLURM_DIR} && \
-  rm ${SLURM_TAR}.tar.gz
+  tar --strip-components=1 -zxvf ${SLURM_TAR} -C ${SLURM_DIR} && \
+  rm ${SLURM_TAR}
 
 ################################################################################
 FROM ${PARENT_IMAGE} AS build
