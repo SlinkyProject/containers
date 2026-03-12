@@ -3,6 +3,6 @@
 
 ################################################################################
 
-slurm_version = "25.05.6"
+slurm_version = "25.05.7"
 slurm_version_micro = "1"
 linux_flavor = "ubuntu24.04"
