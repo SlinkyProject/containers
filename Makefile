@@ -74,3 +74,24 @@ build-docs: ## Build the container image used to develop the docs
 .PHONY: run-docs
 run-docs: build-docs ## Run the container image for docs development
 	$(CONTAINER_TOOL) run --rm --network host -v ./docs:/docs:z $(DOCS_IMAGE) sphinx-autobuild --port 8000 /docs /build/html
+
+## Location to locally build documentation
+LOCALBUILD ?= $(shell pwd)/build-docs
+$(LOCALBUILD):
+	mkdir -p $(LOCALBUILD)
+
+.PHONY: sphinx-build
+sphinx-build: sphinx-install $(LOCALBIN) $(LOCALBUILD)
+	source $(LOCALBIN)/sphinx-venv/bin/activate ;\
+	sphinx-build -M html docs $(LOCALBUILD) ;\
+	deactivate ;\
+
+.PHONY: sphinx-install
+sphinx-install: sphinx-venv
+	source $(LOCALBIN)/sphinx-venv/bin/activate ;\
+	pip install -r docs/requirements.txt ;\
+	deactivate ;\
+
+.PHONY: sphinx-venv
+sphinx-venv: $(LOCALBIN)
+	python3 -m venv $(LOCALBIN)/sphinx-venv
