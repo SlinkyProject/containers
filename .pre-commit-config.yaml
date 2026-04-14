@@ -19,7 +19,7 @@ repos:
         pass_filenames: false
         stages: [commit-msg]
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-merge-conflict
       - id: check-executables-have-shebangs
@@ -32,7 +32,7 @@ repos:
       - id: end-of-file-fixer
       - id: detect-private-key
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.17
+    rev: 0.7.22
     hooks:
       - id: mdformat
         args:
@@ -42,6 +42,14 @@ repos:
           - mdformat-toc
           - mdformat-tables
           - mdformat-gfm-alerts
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        args:
+          - --write-changes
+          - -L
+          - AfterAll,NotIn
   - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
     rev: 0.2.3
     hooks:
