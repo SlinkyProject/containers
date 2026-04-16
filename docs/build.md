@@ -177,10 +177,10 @@ docker bake $BAKE_IMPORTS --builder multiarch multiarch
 ## Extending the images with additional software
 
 Image build stages may also be added or modified to manage custom software
-present in images. It is generally advisible to keep the size and complexity of
+present in images. It is generally advisable to keep the size and complexity of
 each stage minimal, in order to reduce image build time and improve the number
-of stages that can be re-used between builds. Furthermore, changes should be
-made in the most specific stage possible. For example, installing JupyterLab for
+of stages that can be reused between builds. Furthermore, changes should be made
+in the most specific stage possible. For example, installing JupyterLab for
 users should be done in a layer that is specific to the `slurmd` or `login`
 targets, so that it is not installed unnecessarily in `slurmctld` or `slurmdbd`
 images, increasing image size.

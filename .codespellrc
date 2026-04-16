@@ -1,0 +1,5 @@
+[codespell]
+skip = go.*,*.gen.*,
+    *.jpeg,*.jpg,*.png,*.svg,
+    config/crd/**/*.yaml,helm/**/crds/*.yaml,helm/*-crds/**/*.yaml,
+    ./config/crd/**/*.yaml,./helm/**/crds/*.yaml,./helm/*-crds/**/*.yaml,
