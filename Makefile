@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) SchedMD LLC.
+# SPDX-License-Identifier: Apache-2.0
+
 ##@ General
 
 # CONTAINER_TOOL defines the container tool to be used for building images.
