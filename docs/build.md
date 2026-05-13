@@ -207,7 +207,7 @@ After modifying the `base-extra` layer, build the `slurmd` and `login` images:
 
 ```bash
 cd ./schedmd/slurm/
-export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.05/rockylinux9/slurm.hcl"
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.11/rockylinux9/slurm.hcl"
 docker bake $BAKE_IMPORTS slurmd login --print
 docker bake $BAKE_IMPORTS slurmd login
 ```
