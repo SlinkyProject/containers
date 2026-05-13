@@ -19,10 +19,9 @@ set -xeuo pipefail
 apt-get -qq update
 apt-get -qq -y upgrade
 apt-get -qq -y install --no-install-recommends \
+  tini \
   sssd sssd-ad sssd-ldap
-mkdir -p /etc/sssd /run/sssd /var/lib/sss/pipes
+mkdir -p /etc/sssd /run/sssd /var/lib/sss/pipes/private
 EOR
 
-COPY files/usr/local/bin/sssd-entrypoint.sh /usr/local/bin/entrypoint.sh
-
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["tini", "-g", "--", "bash", "-ec", "mkdir -p /etc/sssd /run/sssd /var/lib/sss/pipes/private && exec sssd --interactive ${SSSD_OPTIONS:-}"]

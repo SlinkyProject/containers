@@ -30,6 +30,15 @@ docker bake $BAKE_IMPORTS
 
 For additional instructions, see the [build guide][build-guide].
 
+## Build SSSD Image
+
+```sh
+cd ./schedmd/sssd/
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./ubuntu26.04/sssd.hcl"
+docker bake $BAKE_IMPORTS --print
+docker bake $BAKE_IMPORTS
+```
+
 ## Support and Development
 
 Feature requests, code contributions, and bug reports are welcome!

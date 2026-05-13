@@ -10,6 +10,7 @@
     - [Compatibility](#compatibility)
   - [Slurm](#slurm)
     - [With Custom Registry](#with-custom-registry)
+  - [SSSD](#sssd)
   - [Development](#development)
   - [Multiple Architectures](#multiple-architectures)
     - [Emulation (QEMU)](#emulation-qemu)
@@ -65,6 +66,26 @@ Build Slurm from the selected Slurm version and Linux flavor.
 export REGISTRY="my/registry"
 cd ./schedmd/slurm/
 export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
+docker bake $BAKE_IMPORTS --print
+docker bake $BAKE_IMPORTS
+```
+
+## SSSD
+
+Build SSSD from Ubuntu 26.04.
+
+```sh
+cd ./schedmd/sssd/
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./ubuntu26.04/sssd.hcl"
+docker bake $BAKE_IMPORTS --print
+docker bake $BAKE_IMPORTS
+```
+
+For example:
+
+```sh
+cd ./schedmd/sssd/
+export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./ubuntu26.04/sssd.hcl"
 docker bake $BAKE_IMPORTS --print
 docker bake $BAKE_IMPORTS
 ```
