@@ -3,6 +3,14 @@
 
 ##@ General
 
+# Get the OS to set platform specific commands
+UNAME_S ?= $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+	SED = gsed
+else
+	SED = sed
+endif
+
 # CONTAINER_TOOL defines the container tool to be used for building images.
 # Be aware that the target commands are only tested with Docker which is
 # scaffolded by default. However, you might want to replace it to use other
@@ -65,8 +73,8 @@ generate-docs: pandoc-bin
 	cat ./docs/_static/toc.rst >> docs/index.rst
 	printf '\n' >> docs/index.rst
 	find docs -type f -name "*.md" -exec basename {} \; | awk '{print "    "$$1}' | env LC_ALL=C sort >> docs/index.rst
-	sed -i -E '/<.\/docs\/[A-Za-z]*.md/s/.\/docs\///g' docs/index.rst
-	sed -i -E '/<[A-Za-z]*.md>`/s/.md>/.html>/g' docs/index.rst
+	$(SED) -i -E '/<.\/docs\/[A-Za-z]*.md/s/.\/docs\///g' docs/index.rst
+	$(SED) -i -E '/<[A-Za-z]*.md>`/s/.md>/.html>/g' docs/index.rst
 
 DOCS_IMAGE ?= $(REGISTRY)/sphinx
 

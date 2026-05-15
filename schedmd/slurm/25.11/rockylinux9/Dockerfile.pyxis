@@ -19,12 +19,36 @@ RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked <<EOR
 set -xeuo pipefail
 dnf -q -y update
 dnf -q -y install --setopt='install_weak_deps=False' \
-  ca-certificates wget jq
+  ca-certificates curl-minimal wget
 # Determine Latest Versions
-ENROOT_VERSION="$(wget -qO - https://api.github.com/repos/NVIDIA/enroot/releases/latest | jq -r '.tag_name')"
-ENROOT_VERSION="${ENROOT_VERSION/#v}"
-PYXIS_VERSION="$(wget -qO - https://api.github.com/repos/NVIDIA/pyxis/releases/latest | jq -r '.tag_name')"
-PYXIS_VERSION="${PYXIS_VERSION/#v}"
+latest_github_release() {
+  local repo="$1"
+  local url
+  local tag
+  if ! url="$(
+    curl -fsSLI \
+      --retry 5 \
+      --retry-all-errors \
+      --retry-delay 2 \
+      --connect-timeout 15 \
+      --max-time 60 \
+      -o /dev/null \
+      -w '%{url_effective}' \
+      "https://github.com/NVIDIA/${repo}/releases/latest"
+  )"; then
+    echo "failed to resolve latest ${repo} release" >&2
+    return 1
+  fi
+  tag="${url##*/}"
+  tag="${tag#v}"
+  if [[ -z "${tag}" || "${tag}" == "latest" || ! "${tag}" =~ ^[0-9][0-9A-Za-z._-]*$ ]]; then
+    echo "failed to extract latest ${repo} release tag from ${url}" >&2
+    return 1
+  fi
+  printf '%s\n' "${tag}"
+}
+ENROOT_VERSION="$(latest_github_release enroot)"
+PYXIS_VERSION="$(latest_github_release pyxis)"
 # Determine ARCH
 ARCH=${TARGETARCH}
 case ${TARGETARCH} in
