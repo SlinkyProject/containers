@@ -4,8 +4,7 @@
 
 set -euo pipefail
 
-DIR="$(readlink -f "$(dirname "$0")")"
-cd "$DIR"
+SCRIPT_DIR="$(readlink -f "$(dirname "$0")")"
 
 function log::info() {
 	echo "[$(date)] $*"
@@ -19,9 +18,10 @@ function help() {
 	cat <<EOF
 $(basename "$0") - Generate a manifest for multi-arch images
 
-	usage: $(basename "$0") [--amd64][--arm64] [--push] [--sign]
+	usage: $(basename "$0") [--dir DIR] [--amd64][--arm64] [--push] [--sign]
 
 OPTIONS:
+	--dir DIR           Directory containing docker-bake.hcl and image HCL files.
 	--push              Push manifest to registry.
 	--sign              Sign the pushed manifest by digest with cosign keyless. Requires --push.
 	--amd64             Add amd64/x86_64 images to manifest.
@@ -39,14 +39,20 @@ OPT_AMD64=false
 OPT_ARM64=false
 OPT_PUSH=false
 OPT_SIGN=false
+OPT_DIR="$SCRIPT_DIR"
 
 function parse_opts() {
 	SHORT="+h"
-	LONG="amd64,arm64,debug,push,sign,help"
+	LONG="amd64,arm64,debug,dir:,push,sign,help"
 	OPTS="$(getopt -a --options "$SHORT" --longoptions "$LONG" -- "$@")"
 	eval set -- "${OPTS}"
 	while :; do
 		case "$1" in
+		--dir)
+			OPT_DIR="$2"
+			shift 2
+			log::info "dir set to $OPT_DIR"
+			;;
 		--push)
 			OPT_PUSH=true
 			shift
@@ -96,6 +102,12 @@ function parse_opts() {
 
 function main() {
 	parse_opts "$@"
+
+	if [[ ! -d $OPT_DIR ]]; then
+		log::error "manifest directory does not exist: $OPT_DIR"
+		exit 1
+	fi
+	cd "$OPT_DIR"
 
 	IMAGES=()
 
