@@ -19,10 +19,11 @@ function help() {
 	cat <<EOF
 $(basename "$0") - Generate a manifest for multi-arch images
 
-	usage: $(basename "$0") [--amd64][--arm64] [--push]
+	usage: $(basename "$0") [--amd64][--arm64] [--push] [--sign]
 
 OPTIONS:
 	--push              Push manifest to registry.
+	--sign              Sign the pushed manifest by digest with cosign keyless. Requires --push.
 	--amd64             Add amd64/x86_64 images to manifest.
 	--arm64             Add arm64/aarch64 images to manifest.
 
@@ -37,10 +38,11 @@ OPT_DEBUG=false
 OPT_AMD64=false
 OPT_ARM64=false
 OPT_PUSH=false
+OPT_SIGN=false
 
 function parse_opts() {
 	SHORT="+h"
-	LONG="amd64,arm64,debug,push,help"
+	LONG="amd64,arm64,debug,push,sign,help"
 	OPTS="$(getopt -a --options "$SHORT" --longoptions "$LONG" -- "$@")"
 	eval set -- "${OPTS}"
 	while :; do
@@ -49,6 +51,11 @@ function parse_opts() {
 			OPT_PUSH=true
 			shift
 			log::info "push enabled"
+			;;
+		--sign)
+			OPT_SIGN=true
+			shift
+			log::info "sign enabled"
 			;;
 		--amd64)
 			OPT_AMD64=true
@@ -80,6 +87,11 @@ function parse_opts() {
 			;;
 		esac
 	done
+
+	if "$OPT_SIGN" && ! "$OPT_PUSH"; then
+		log::error "--sign requires --push"
+		exit 1
+	fi
 }
 
 function main() {
@@ -128,6 +140,9 @@ function manifest() {
 	local tag="$1"
 	manifest::create "$tag"
 	manifest::inspect "$tag"
+	if "$OPT_SIGN"; then
+		manifest::sign "$tag"
+	fi
 }
 
 function manifest::create() {
@@ -162,6 +177,22 @@ function manifest::inspect() {
 		eval "${cmd[*]}"
 		echo ""
 	fi
+}
+
+# Sign the pushed manifest list by digest (not tag) with cosign keyless signing.
+# Signing the index digest covers all per-arch manifests it references, so one
+# signature per tag is sufficient for consumers who verify the tag they pulled.
+function manifest::sign() {
+	local tag="$1"
+	local repo="${tag%:*}"
+	local digest
+	digest="$(docker buildx imagetools inspect "$tag" | awk '/^Digest:/ {print $2; exit}')"
+	if [[ -z $digest ]]; then
+		log::error "failed to resolve digest for $tag"
+		return 1
+	fi
+	log::info "cosign sign --yes ${repo}@${digest}"
+	cosign sign --yes "${repo}@${digest}"
 }
 
 main "$@"
