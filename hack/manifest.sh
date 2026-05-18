@@ -4,8 +4,6 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(readlink -f "$(dirname "$0")")"
-
 function log::info() {
 	echo "[$(date)] $*"
 }
@@ -39,7 +37,7 @@ OPT_AMD64=false
 OPT_ARM64=false
 OPT_PUSH=false
 OPT_SIGN=false
-OPT_DIR="$SCRIPT_DIR"
+OPT_DIR="."
 
 function parse_opts() {
 	SHORT="+h"
