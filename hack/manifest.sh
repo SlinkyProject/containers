@@ -115,20 +115,20 @@ function main() {
 	# Assume the architecture registries follow the schema: '${REGISTRY}/${ARCH}/${TARGET}:${TAG}'
 	# Assume the index of each image/tag list aligns.
 	local target
-	for target in $(docker buildx bake $BAKE_IMPORTS $BAKE_TARGET --print 2>/dev/null | jq -r '.target[].target' | sort -u | sed 's/-/_/g'); do
+	for target in $(docker buildx bake $BAKE_IMPORTS $BAKE_TARGET --print 2>/dev/null | jq -r '.target | keys[]' | sort -u); do
 		local tags=()
-		readarray -t tags < <(docker buildx bake $BAKE_IMPORTS $target --print 2>/dev/null | jq '.target[].tags' | jq -r '.[]' | sort -u)
+		readarray -t tags < <(docker buildx bake $BAKE_IMPORTS $target --print 2>/dev/null | jq -r --arg target "$target" '.target[$target].tags[]' | sort -u)
 
 		local amd64=()
 		if "$OPT_AMD64"; then
 			local registry="${REGISTRY:-"ghcr.io/slinkyproject"}/amd64"
-			mapfile -t amd64 < <(REGISTRY="$registry" docker buildx bake $BAKE_IMPORTS $target --print 2>/dev/null | jq '.target[].tags' | jq -r '.[]' | sort -u)
+			mapfile -t amd64 < <(REGISTRY="$registry" docker buildx bake $BAKE_IMPORTS $target --print 2>/dev/null | jq -r --arg target "$target" '.target[$target].tags[]' | sort -u)
 		fi
 
 		local arm64=()
 		if "$OPT_ARM64"; then
 			local registry="${REGISTRY:-"ghcr.io/slinkyproject"}/arm64"
-			mapfile -t arm64 < <(REGISTRY="$registry" docker buildx bake $BAKE_IMPORTS $target --print 2>/dev/null | jq '.target[].tags' | jq -r '.[]' | sort -u)
+			mapfile -t arm64 < <(REGISTRY="$registry" docker buildx bake $BAKE_IMPORTS $target --print 2>/dev/null | jq -r --arg target "$target" '.target[$target].tags[]' | sort -u)
 		fi
 
 		local size=0
