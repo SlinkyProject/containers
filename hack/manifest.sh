@@ -39,6 +39,9 @@ OPT_PUSH=false
 OPT_SIGN=false
 OPT_DIR="."
 
+MANIFEST_CREATE_RETRIES="${MANIFEST_CREATE_RETRIES:-4}"
+MANIFEST_CREATE_RETRY_DELAY_SECONDS="${MANIFEST_CREATE_RETRY_DELAY_SECONDS:-15}"
+
 function parse_opts() {
 	SHORT="+h"
 	LONG="amd64,arm64,debug,dir:,push,sign,help"
@@ -168,8 +171,22 @@ function manifest::create() {
 		cmd+=("$image")
 	done
 	! "$OPT_PUSH" && cmd+=("--dry-run")
-	log::info "${cmd[*]}"
-	eval "${cmd[*]}"
+
+	local attempt=1
+	local max_attempts=$((MANIFEST_CREATE_RETRIES + 1))
+	while true; do
+		log::info "${cmd[*]}"
+		if eval "${cmd[*]}"; then
+			return 0
+		fi
+		if ((attempt >= max_attempts)); then
+			log::error "manifest create failed after ${attempt} attempts: $tag"
+			return 1
+		fi
+		log::error "manifest create failed for $tag; retrying in ${MANIFEST_CREATE_RETRY_DELAY_SECONDS}s (${attempt}/${MANIFEST_CREATE_RETRIES})"
+		sleep "$MANIFEST_CREATE_RETRY_DELAY_SECONDS"
+		((attempt++))
+	done
 }
 
 function manifest::inspect() {
