@@ -114,12 +114,19 @@ docker pull ghcr.io/slinkyproject/login:26.05-ubuntu26.04
 
 ### Environment
 
-| Variable      | Description                                   |
-| ------------- | --------------------------------------------- |
-| SACKD_OPTIONS | Arguments passed to `sackd`.                  |
-| SSHD_OPTIONS  | Arguments passed to `sshd`.                   |
-| SSSD_OPTIONS  | Arguments passed to `sssd`.                   |
-| SSSD_MODE     | SSSD mode: `embedded`, `sidecar`, `disabled`. |
+| Variable      | Description                                    |
+| ------------- | ---------------------------------------------- |
+| SACKD_OPTIONS | Arguments passed to embedded `sackd`.          |
+| SACKD_MODE    | sackd mode: `embedded`, `sidecar`, `disabled`. |
+| SSHD_OPTIONS  | Arguments passed to `sshd`.                    |
+| SSSD_OPTIONS  | Arguments passed to `sssd`.                    |
+| SSSD_MODE     | SSSD mode: `embedded`, `sidecar`, `disabled`.  |
+
+`SACKD_MODE` controls whether the [login] image starts sackd. When set to
+`embedded`, the main container starts sackd by enabling the supervisord sackd
+configuration. When set to `sidecar`, the main container does not start sackd;
+sackd is expected to run in a sidecar container. When set to `disabled`, the
+main container does not start sackd and no sidecar is expected.
 
 `SSSD_MODE` has the same behavior for the [slurmd] and [login] images. When set
 to `embedded`, the main container starts SSSD by enabling the supervisord SSSD

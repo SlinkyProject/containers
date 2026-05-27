@@ -332,12 +332,17 @@ rm -f /etc/ssh/ssh_host_*
 EOR
 
 COPY files/etc/supervisord.conf /etc/
-COPY files/etc/supervisord.d/sssd.ini /etc/supervisord.available/
 COPY \
   files/etc/supervisord.d/fakesystemd-slurm.ini \
   files/etc/supervisord.d/sackd.ini \
+  files/etc/supervisord.d/sssd.ini \
+  /etc/supervisord.available/
+COPY \
   files/etc/supervisord.d/sshd.ini \
   /etc/supervisord.d/
+RUN rm -f \
+  /etc/supervisord.d/fakesystemd-slurm.ini \
+  /etc/supervisord.d/sackd.ini
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/login-entrypoint.sh /usr/local/bin/entrypoint.sh
 

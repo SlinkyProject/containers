@@ -28,6 +28,28 @@ function configure_sssd() {
 	esac
 }
 
+function configure_sackd() {
+	local sackd_mode="${SACKD_MODE:-embedded}"
+	local available_conf="/etc/supervisord.available/sackd.ini"
+	local enabled_conf="/etc/supervisord.d/sackd.ini"
+	local available_fakesystemd_conf="/etc/supervisord.available/fakesystemd-slurm.ini"
+	local enabled_fakesystemd_conf="/etc/supervisord.d/fakesystemd-slurm.ini"
+
+	rm -f "$enabled_conf" "$enabled_fakesystemd_conf"
+
+	case "$sackd_mode" in
+	embedded)
+		ln -s "$available_fakesystemd_conf" "$enabled_fakesystemd_conf"
+		ln -s "$available_conf" "$enabled_conf"
+		;;
+	sidecar | disabled) ;;
+	*)
+		echo "unsupported SACKD_MODE: ${sackd_mode}" >&2
+		exit 1
+		;;
+	esac
+}
+
 function main() {
 	mkdir -p /run/sshd/
 	chmod 0755 /run/sshd/
@@ -36,6 +58,7 @@ function main() {
 
 	ssh-keygen -A
 	configure_sssd
+	configure_sackd
 
 	exec supervisord -c /etc/supervisord.conf
 }
