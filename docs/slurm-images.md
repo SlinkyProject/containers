@@ -104,6 +104,11 @@ docker pull ghcr.io/slinkyproject/sackd:26.05-ubuntu26.04
 | ------------- | ---------------------------- |
 | SACKD_OPTIONS | Arguments passed to `sackd`. |
 
+The [sackd] image includes the SSSD NSS client so it can resolve users through
+an SSSD sidecar. When running [sackd] with an SSSD sidecar, share the SSSD
+runtime sockets by mounting the same volumes at `/run/sssd` and
+`/var/lib/sss/pipes`.
+
 ## login
 
 Pull a [login] image.
@@ -148,10 +153,11 @@ volumes at `/run/sssd` and `/var/lib/sss/pipes`. Do not mount over all of
 `/var/lib/sss`; doing so hides SSSD's image-provided `/var/lib/sss/db`
 directory.
 
-When running the [sssd] image as a sidecar for [slurmd] or [login], share the
-SSSD runtime sockets with the main container by mounting the same volumes at
-`/run/sssd` and `/var/lib/sss/pipes`. Do not mount over all of `/var/lib/sss`;
-doing so hides SSSD's image-provided `/var/lib/sss/db` directory.
+When running the [sssd] image as a sidecar for [slurmd], [login], or [sackd],
+share the SSSD runtime sockets with the client container by mounting the same
+volumes at `/run/sssd` and `/var/lib/sss/pipes`. Do not mount over all of
+`/var/lib/sss`; doing so hides SSSD's image-provided `/var/lib/sss/db`
+directory.
 
 <!-- Links -->
 
