@@ -31,7 +31,7 @@ This document explains how to use Slurm images.
 Pull a [slurmctld] image.
 
 ```sh
-docker pull ghcr.io/slinkyproject/slurmctld:25.11-ubuntu24.04
+docker pull ghcr.io/slinkyproject/slurmctld:26.05-ubuntu24.04
 ```
 
 ### Environment
@@ -45,7 +45,7 @@ docker pull ghcr.io/slinkyproject/slurmctld:25.11-ubuntu24.04
 Pull a [slurmdbd] image.
 
 ```sh
-docker pull ghcr.io/slinkyproject/slurmdbd:25.11-ubuntu24.04
+docker pull ghcr.io/slinkyproject/slurmdbd:26.05-ubuntu24.04
 ```
 
 ### Environment
@@ -59,7 +59,7 @@ docker pull ghcr.io/slinkyproject/slurmdbd:25.11-ubuntu24.04
 Pull a [slurmrestd] image.
 
 ```sh
-docker pull ghcr.io/slinkyproject/slurmrestd:25.11-ubuntu24.04
+docker pull ghcr.io/slinkyproject/slurmrestd:26.05-ubuntu24.04
 ```
 
 ### Environment
@@ -73,7 +73,7 @@ docker pull ghcr.io/slinkyproject/slurmrestd:25.11-ubuntu24.04
 Pull a [slurmd] image.
 
 ```sh
-docker pull ghcr.io/slinkyproject/slurmd:25.11-ubuntu24.04
+docker pull ghcr.io/slinkyproject/slurmd:26.05-ubuntu24.04
 ```
 
 ### Environment
@@ -93,7 +93,7 @@ docker pull ghcr.io/slinkyproject/slurmd:25.11-ubuntu24.04
 Pull a [sackd] image.
 
 ```sh
-docker pull ghcr.io/slinkyproject/sackd:25.11-ubuntu24.04
+docker pull ghcr.io/slinkyproject/sackd:26.05-ubuntu24.04
 ```
 
 ### Environment
@@ -107,7 +107,7 @@ docker pull ghcr.io/slinkyproject/sackd:25.11-ubuntu24.04
 Pull a [login] image.
 
 ```sh
-docker pull ghcr.io/slinkyproject/login:25.11-ubuntu24.04
+docker pull ghcr.io/slinkyproject/login:26.05-ubuntu24.04
 ```
 
 ### Environment
