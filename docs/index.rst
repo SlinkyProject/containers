@@ -26,16 +26,26 @@ Build Slurm Images
    docker bake $BAKE_IMPORTS --print
    docker bake $BAKE_IMPORTS
 
-For example, the following will build Slurm 25.11 on Rocky Linux 9.
+For example, the following will build Slurm 26.05 on Rocky Linux 9.
 
 .. code:: sh
 
    cd ./schedmd/slurm/
-   export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./25.11/rockylinux9/slurm.hcl"
+   export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./26.05/rockylinux9/slurm.hcl"
    docker bake $BAKE_IMPORTS --print
    docker bake $BAKE_IMPORTS
 
 For additional instructions, see the `build guide <build.html>`__.
+
+Build SSSD Image
+----------------
+
+.. code:: sh
+
+   cd ./schedmd/sssd/
+   export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./ubuntu26.04/sssd.hcl"
+   docker bake $BAKE_IMPORTS --print
+   docker bake $BAKE_IMPORTS
 
 Support and Development
 -----------------------

@@ -4,7 +4,7 @@
 
 ################################################################################
 
-ARG SLURM_VERSION=25.11-latest
+ARG SLURM_VERSION=26.05.0
 ARG SLURM_VERSION_MICRO=1
 ARG SLURM_DIR=slurm
 ARG PARENT_IMAGE=rockylinux/rockylinux:9
@@ -204,11 +204,11 @@ rm -f /etc/ssh/ssh_host_*
 EOR
 
 COPY files/etc/supervisord.conf /etc/
+COPY files/etc/supervisord.d/sssd.ini /etc/supervisord.available/
 COPY \
   files/etc/supervisord.d/fakesystemd.ini \
   files/etc/supervisord.d/slurmd.ini \
   files/etc/supervisord.d/sshd.ini \
-  files/etc/supervisord.d/sssd.ini \
   /etc/supervisord.d/
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/slurmd-entrypoint.sh /usr/local/bin/entrypoint.sh
@@ -298,7 +298,6 @@ dnf -q -y install --setopt='install_weak_deps=False' \
 rm *.rpm
 # Prepare Directories
 mkdir -p /etc/authselect /run/slurm/ /run/sssd /var/lib/sss/pipes
-chown ${SLURM_USER}:${SLURM_USER} /run/slurm
 authselect select sssd --force
 EOR
 
@@ -338,9 +337,14 @@ COPY files/etc/supervisord.conf /etc/
 COPY \
   files/etc/supervisord.d/fakesystemd-slurm.ini \
   files/etc/supervisord.d/sackd.ini \
-  files/etc/supervisord.d/sshd.ini \
   files/etc/supervisord.d/sssd.ini \
+  /etc/supervisord.available/
+COPY \
+  files/etc/supervisord.d/sshd.ini \
   /etc/supervisord.d/
+RUN rm -f \
+  /etc/supervisord.d/fakesystemd-slurm.ini \
+  /etc/supervisord.d/sackd.ini
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/login-entrypoint.sh /usr/local/bin/entrypoint.sh
 

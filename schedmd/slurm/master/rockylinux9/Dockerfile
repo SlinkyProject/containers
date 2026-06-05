@@ -204,11 +204,11 @@ rm -f /etc/ssh/ssh_host_*
 EOR
 
 COPY files/etc/supervisord.conf /etc/
+COPY files/etc/supervisord.d/sssd.ini /etc/supervisord.available/
 COPY \
   files/etc/supervisord.d/fakesystemd.ini \
   files/etc/supervisord.d/slurmd.ini \
   files/etc/supervisord.d/sshd.ini \
-  files/etc/supervisord.d/sssd.ini \
   /etc/supervisord.d/
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/slurmd-entrypoint.sh /usr/local/bin/entrypoint.sh
@@ -291,12 +291,14 @@ RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked <<EOR
 # Install Slurm Packages
 set -xeuo pipefail
 dnf -q -y install --setopt='install_weak_deps=False' \
+  authselect sssd-client \
   socat \
   ./slurm-sackd-[0-9]*.rpm \
   ./slurm-[0-9]*.rpm
 rm *.rpm
 # Prepare Directories
-mkdir -p /run/slurm/
+mkdir -p /etc/authselect /run/slurm/ /run/sssd /var/lib/sss/pipes
+authselect select sssd --force
 EOR
 
 COPY files/etc/supervisord.conf /etc/
@@ -335,9 +337,14 @@ COPY files/etc/supervisord.conf /etc/
 COPY \
   files/etc/supervisord.d/fakesystemd-slurm.ini \
   files/etc/supervisord.d/sackd.ini \
-  files/etc/supervisord.d/sshd.ini \
   files/etc/supervisord.d/sssd.ini \
+  /etc/supervisord.available/
+COPY \
+  files/etc/supervisord.d/sshd.ini \
   /etc/supervisord.d/
+RUN rm -f \
+  /etc/supervisord.d/fakesystemd-slurm.ini \
+  /etc/supervisord.d/sackd.ini
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/login-entrypoint.sh /usr/local/bin/entrypoint.sh
 
