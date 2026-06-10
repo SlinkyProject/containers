@@ -4,7 +4,7 @@
 
 ################################################################################
 
-ARG SLURM_VERSION=26.05.0
+ARG SLURM_VERSION=26.05.1
 ARG SLURM_VERSION_MICRO=1
 ARG SLURM_DIR=slurm
 ARG PARENT_IMAGE=ubuntu:26.04
