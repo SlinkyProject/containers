@@ -145,6 +145,7 @@ set -xeuo pipefail
 apt-get -qq update
 apt-get -qq -y install --no-install-recommends --fix-broken \
   socat \
+  postfix \
   ./slurm-smd-client_[0-9]*.deb \
   ./slurm-smd-client-dbgsym_[0-9]*.ddeb \
   ./slurm-smd-dev_[0-9]*.deb \
@@ -160,6 +161,7 @@ COPY files/etc/supervisor/supervisord.conf /etc/supervisor/
 COPY \
   files/etc/supervisor/conf.d/slurmctld.conf \
   files/etc/supervisor/conf.d/fakesystemd.conf \
+  files/etc/supervisor/conf.d/postfix.conf \
   /etc/supervisor/conf.d/
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/slurmctld-entrypoint.sh /usr/local/bin/entrypoint.sh
@@ -361,6 +363,7 @@ set -xeuo pipefail
 apt-get -qq update
 apt-get -qq -y install --no-install-recommends \
   socat \
+  postfix \
   openssh-server \
   authselect sssd sssd-ad sssd-ldap libpam-sss libnss-sss
 # Configure
@@ -375,6 +378,7 @@ COPY \
   files/etc/supervisor/conf.d/sackd.conf \
   files/etc/supervisor/conf.d/sshd.conf \
   files/etc/supervisor/conf.d/sssd.conf \
+  files/etc/supervisor/conf.d/postfix.conf \
   /etc/supervisor/conf.d/
 COPY files/usr/local/bin/fakesystemd.sh /usr/local/bin/
 COPY files/usr/local/bin/login-entrypoint.sh /usr/local/bin/entrypoint.sh
