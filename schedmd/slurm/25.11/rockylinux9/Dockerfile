@@ -291,15 +291,13 @@ RUN --mount=type=cache,target=/var/cache/dnf,sharing=locked <<EOR
 # Install Slurm Packages
 set -xeuo pipefail
 dnf -q -y install --setopt='install_weak_deps=False' \
-  authselect sssd-client \
   socat \
   ./slurm-sackd-[0-9]*.rpm \
   ./slurm-[0-9]*.rpm
 rm *.rpm
 # Prepare Directories
-mkdir -p /etc/authselect /run/slurm/ /run/sssd /var/lib/sss/pipes
+mkdir -p /run/slurm/
 chown ${SLURM_USER}:${SLURM_USER} /run/slurm
-authselect select sssd --force
 EOR
 
 COPY files/etc/supervisord.conf /etc/
