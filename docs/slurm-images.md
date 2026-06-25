@@ -114,18 +114,11 @@ docker pull ghcr.io/slinkyproject/login:26.05-ubuntu26.04
 
 ### Environment
 
-| Variable      | Description                                   |
-| ------------- | --------------------------------------------- |
-| SACKD_OPTIONS | Arguments passed to `sackd`.                  |
-| SSHD_OPTIONS  | Arguments passed to `sshd`.                   |
-| SSSD_OPTIONS  | Arguments passed to `sssd`.                   |
-| SSSD_MODE     | SSSD mode: `embedded`, `sidecar`, `disabled`. |
-
-`SSSD_MODE` has the same behavior for the [slurmd] and [login] images. When set
-to `embedded`, the main container starts SSSD by enabling the supervisord SSSD
-configuration. When set to `sidecar`, the main container does not start SSSD;
-SSSD is expected to run in a sidecar container. When set to `disabled`, the main
-container does not start SSSD and no sidecar is expected.
+| Variable      | Description                  |
+| ------------- | ---------------------------- |
+| SACKD_OPTIONS | Arguments passed to `sackd`. |
+| SSHD_OPTIONS  | Arguments passed to `sshd`.  |
+| SSSD_OPTIONS  | Arguments passed to `sssd`.  |
 
 ## sssd
 
@@ -140,11 +133,6 @@ share the SSSD runtime sockets with the client container by mounting the same
 volumes at `/run/sssd` and `/var/lib/sss/pipes`. Do not mount over all of
 `/var/lib/sss`; doing so hides SSSD's image-provided `/var/lib/sss/db`
 directory.
-
-When running the [sssd] image as a sidecar for [slurmd] or [login], share the
-SSSD runtime sockets with the main container by mounting the same volumes at
-`/run/sssd` and `/var/lib/sss/pipes`. Do not mount over all of `/var/lib/sss`;
-doing so hides SSSD's image-provided `/var/lib/sss/db` directory.
 
 <!-- Links -->
 
