@@ -19,7 +19,6 @@
     - [Environment](#environment-4)
   - [login](#login)
     - [Environment](#environment-5)
-  - [sssd](#sssd)
 
 <!-- mdformat-toc end -->
 
@@ -79,16 +78,15 @@ docker pull ghcr.io/slinkyproject/slurmd:26.05-ubuntu26.04
 
 ### Environment
 
-| Variable                | Description                                   |
-| ----------------------- | --------------------------------------------- |
-| SLURMD_OPTIONS          | Arguments passed to `slurmd`.                 |
-| SSHD_OPTIONS            | Arguments passed to `sshd`.                   |
-| SSSD_OPTIONS            | Arguments passed to `sssd`.                   |
-| SSSD_MODE               | SSSD mode: `embedded`, `sidecar`, `disabled`. |
-| PAM_SLURM_ADOPT_OPTIONS | Options added to the `pam_slurm_adopt` line.  |
-| POD_CPUS                | Used to calculate slurmd `CoreSpecCount`.     |
-| POD_MEMORY              | Used to calculate slurmd `MemSpecLimit`.      |
-| POD_TOPOLOGY            | Used for slurmd dynamic topology.             |
+| Variable                | Description                                  |
+| ----------------------- | -------------------------------------------- |
+| SLURMD_OPTIONS          | Arguments passed to `slurmd`.                |
+| SSHD_OPTIONS            | Arguments passed to `sshd`.                  |
+| SSSD_OPTIONS            | Arguments passed to `sssd`.                  |
+| PAM_SLURM_ADOPT_OPTIONS | Options added to the `pam_slurm_adopt` line. |
+| POD_CPUS                | Used to calculate slurmd `CoreSpecCount`.    |
+| POD_MEMORY              | Used to calculate slurmd `MemSpecLimit`.     |
+| POD_TOPOLOGY            | Used for slurmd dynamic topology.            |
 
 ## sackd
 
@@ -120,20 +118,6 @@ docker pull ghcr.io/slinkyproject/login:26.05-ubuntu26.04
 | SSHD_OPTIONS  | Arguments passed to `sshd`.  |
 | SSSD_OPTIONS  | Arguments passed to `sssd`.  |
 
-## sssd
-
-Pull a [sssd] image.
-
-```sh
-docker pull ghcr.io/slinkyproject/sssd:ubuntu26.04
-```
-
-When running the [sssd] image as a sidecar for [slurmd], [login], or [sackd],
-share the SSSD runtime sockets with the client container by mounting the same
-volumes at `/run/sssd` and `/var/lib/sss/pipes`. Do not mount over all of
-`/var/lib/sss`; doing so hides SSSD's image-provided `/var/lib/sss/db`
-directory.
-
 <!-- Links -->
 
 [login]: https://github.com/SlinkyProject/containers/pkgs/container/login
@@ -142,4 +126,3 @@ directory.
 [slurmd]: https://github.com/SlinkyProject/containers/pkgs/container/slurmd
 [slurmdbd]: https://github.com/SlinkyProject/containers/pkgs/container/slurmdbd
 [slurmrestd]: https://github.com/SlinkyProject/containers/pkgs/container/slurmrestd
-[sssd]: https://github.com/SlinkyProject/containers/pkgs/container/sssd
