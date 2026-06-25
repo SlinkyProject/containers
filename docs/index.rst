@@ -37,16 +37,6 @@ For example, the following will build Slurm 26.05 on Rocky Linux 9.
 
 For additional instructions, see the `build guide <build.html>`__.
 
-Build SSSD Image
-----------------
-
-.. code:: sh
-
-   cd ./schedmd/sssd/
-   export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./ubuntu26.04/sssd.hcl"
-   docker bake $BAKE_IMPORTS --print
-   docker bake $BAKE_IMPORTS
-
 Support and Development
 -----------------------
 

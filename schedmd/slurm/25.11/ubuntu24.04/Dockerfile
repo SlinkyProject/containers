@@ -317,7 +317,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 set -xeuo pipefail
 apt-get -qq update
 apt-get -qq -y install --no-install-recommends --fix-broken \
-  authselect libnss-sss \
   socat \
   ./slurm-smd-client_[0-9]*.deb \
   ./slurm-smd-client-dbgsym_[0-9]*.ddeb \
@@ -328,9 +327,8 @@ apt-get -qq -y install --no-install-recommends --fix-broken \
   ./slurm-smd-dbgsym_[0-9]*.ddeb
 rm *.deb && rm *.ddeb
 # Prepare Directories
-mkdir -p /etc/authselect /run/slurm/ /run/sssd /var/lib/sss/pipes
+mkdir -p /run/slurm/
 chown ${SLURM_USER}:${SLURM_USER} /run/slurm
-authselect select sssd --force
 EOR
 
 COPY files/etc/supervisor/supervisord.conf /etc/supervisor/
