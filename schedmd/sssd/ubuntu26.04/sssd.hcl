@@ -1,6 +1,0 @@
-// SPDX-FileCopyrightText: Copyright (C) SchedMD LLC.
-// SPDX-License-Identifier: Apache-2.0
-
-################################################################################
-
-linux_flavor = "ubuntu26.04"
