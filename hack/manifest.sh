@@ -213,7 +213,9 @@ function manifest::sign() {
 	local tag="$1"
 	local repo="${tag%:*}"
 	local digest
-	digest="$(docker buildx imagetools inspect "$tag" | awk '/^Digest:/ {print $2; exit}')"
+	# Let awk consume all input: exiting early SIGPIPEs docker, and with
+	# pipefail + errexit the script dies silently (exit 255).
+	digest="$(docker buildx imagetools inspect "$tag" | awk '/^Digest:/ && !d {d = $2} END {print d}')"
 	if [[ -z $digest ]]; then
 		log::error "failed to resolve digest for $tag"
 		return 1
