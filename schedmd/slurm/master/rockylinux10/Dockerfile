@@ -125,7 +125,7 @@ dnf config-manager --enable crb
 dnf -q -y upgrade
 # Init System
 dnf -q -y install --setopt='install_weak_deps=False' \
-  supervisor
+  supervisor util-linux
 # Debug
 dnf -q -y install --setopt='install_weak_deps=False' \
   procps-ng iputils ncurses

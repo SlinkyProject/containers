@@ -105,7 +105,7 @@ apt-get -qq update
 apt-get -qq -y upgrade
 # Init System
 apt-get -qq -y install --no-install-recommends \
-  supervisor tini
+  supervisor tini util-linux
 # Debug
 apt-get -qq -y install --no-install-recommends \
   procps iputils-ping ncurses-bin
