@@ -74,15 +74,6 @@ docker bake $BAKE_IMPORTS
 Build Slurm from the selected repository and branch for a Slurm version and
 Linux flavor.
 
-> [!NOTE]
-> The docker SSH agent is used to avoid credentials leaking into the image
-> layers. You will need to add a default private key if the target repository is
-> private.
-
-```sh
-ssh-add ~/.ssh/id_ed25519 # if private repo
-```
-
 Build Slurm from the selected Slurm version and Linux flavor.
 
 ```sh
@@ -91,7 +82,7 @@ export GIT_BRANCH=master
 cd ./schedmd/slurm/
 export BAKE_IMPORTS="--file ./docker-bake.hcl --file ./$VERSION/$FLAVOR/slurm.hcl"
 docker bake $BAKE_IMPORTS dev --print
-docker bake $BAKE_IMPORTS dev
+docker bake $BAKE_IMPORTS dev --allow=ssh --set "*.ssh=default=$HOME/.ssh/id_ed25519"
 ```
 
 ## Multiple Architectures

@@ -389,10 +389,7 @@ target "_dev" {
   contexts = {
     "slurm-src" = "target:slurm-src-dev"
   }
-  ssh = [
-    # ssh-add ~/.ssh/id_ed25519
-    { id = "default" },
-  ]
+  ssh = ["default"]
 }
 
 target "slurm-src-dev" {
