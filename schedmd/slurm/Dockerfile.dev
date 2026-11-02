@@ -8,7 +8,7 @@ FROM alpine:latest AS slurm-src
 
 ARG SLURM_VERSION=master
 ARG SLURM_DIR=slurm
-ARG GIT_REPO=git@gitlab.com:SchedMD/dev/slurm.git
+ARG GIT_REPO=git@gitlab.com:SchedMD/slurm.git
 ARG GIT_BRANCH=master
 
 WORKDIR /workspace/

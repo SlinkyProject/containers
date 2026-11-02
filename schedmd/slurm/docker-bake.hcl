@@ -369,7 +369,7 @@ target "login_pyxis_multiarch" {
 ################################################################################
 
 variable "GIT_REPO" {
-  default = "git@gitlab.com:SchedMD/dev/slurm.git"
+  default = "git@gitlab.com:SchedMD/slurm.git"
 }
 
 variable "GIT_BRANCH" {
