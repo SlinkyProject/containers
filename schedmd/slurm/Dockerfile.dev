@@ -8,12 +8,11 @@ FROM alpine:latest AS slurm-src
 
 ARG SLURM_VERSION=master
 ARG SLURM_DIR=slurm
-ARG GIT_REPO=git@gitlab.com:SchedMD/dev/slurm.git
+ARG GIT_REPO=git@gitlab.com:SchedMD/slurm.git
 ARG GIT_BRANCH=master
 
 WORKDIR /workspace/
 
-# NOTE:
-# - if `Permission denied (publickey)`, ssh-agent may lack an identity.
-# - Add identity to ssh-agent with `ssh-add ~/.ssh/id_ed25519`.
+# NOTE: Resolve "failed to solve: unset ssh forward key default" error with:
+#   --set "*.ssh=default=$HOME/.ssh/id_ed25519"
 ADD ${GIT_REPO}#${GIT_BRANCH} ${SLURM_DIR}

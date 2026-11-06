@@ -369,7 +369,7 @@ target "login_pyxis_multiarch" {
 ################################################################################
 
 variable "GIT_REPO" {
-  default = "git@gitlab.com:SchedMD/dev/slurm.git"
+  default = "git@gitlab.com:SchedMD/slurm.git"
 }
 
 variable "GIT_BRANCH" {
@@ -389,10 +389,7 @@ target "_dev" {
   contexts = {
     "slurm-src" = "target:slurm-src-dev"
   }
-  ssh = [
-    # ssh-add ~/.ssh/id_ed25519
-    { id = "default" },
-  ]
+  ssh = ["default"]
 }
 
 target "slurm-src-dev" {
