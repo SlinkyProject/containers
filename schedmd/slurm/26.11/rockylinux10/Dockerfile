@@ -4,8 +4,8 @@
 
 ################################################################################
 
-ARG SLURM_VERSION=26.11.0-0rc1
-ARG SLURM_VERSION_ARCHIVE=slurm-26-11-0-0rc1
+ARG SLURM_VERSION=26.11.0-0rc2
+ARG SLURM_VERSION_ARCHIVE=slurm-26-11-0-0rc2
 ARG SLURM_DIR=slurm
 ARG PARENT_IMAGE=rockylinux/rockylinux:10
 
